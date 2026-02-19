@@ -54,6 +54,7 @@ import { ProjectDetails } from './components/contractor/ProjectDetails';
 
 // Contractor Layout Components
 import { ContractorLayout } from './components/contractor/ContractorLayout';
+import { ContractorNavbar } from './components/contractor/ContractorNavbar';
 import { ContractorProfile } from './components/contractor/ContractorProfile';
 import { ContractorMyProjects } from './components/contractor/ContractorMyProjects';
 import { ContractorProjectDetails } from './components/contractor/ContractorProjectDetails';
@@ -72,6 +73,7 @@ export default function App() {
 
   const [currentPage, setCurrentPage] = useState('home'); // Show home page by default
   const [isSigningUp, setIsSigningUp] = useState<string | null>(null);
+  const [redirectAfterLogin, setRedirectAfterLogin] = useState<string | null>(null); // Track redirect destination
 
   // Quick demo: Auto-login as homeowner and show project details
   // useEffect(() => {
@@ -85,15 +87,31 @@ export default function App() {
     window.scrollTo(0, 0);
   }, [currentPage, auth.isAuthenticated]);
 
-  // Login Handler
+  // Login Handler with redirect support
   const handleLogin = (role: string) => {
     setAuth({ isAuthenticated: true, role: role as any });
-    setCurrentPage('dashboard');
+    
+    // If there's a redirect destination, go there instead of dashboard
+    if (redirectAfterLogin) {
+      setCurrentPage(redirectAfterLogin);
+      setRedirectAfterLogin(null); // Clear redirect
+    } else {
+      setCurrentPage('dashboard');
+    }
   };
 
   const handleLogout = () => {
     setAuth({ isAuthenticated: false, role: null });
     setCurrentPage('home');
+    setRedirectAfterLogin(null); // Clear any pending redirects
+  };
+
+  // Handler for when login is required
+  const handleLoginRequired = (intendedDestination?: string) => {
+    if (intendedDestination) {
+      setRedirectAfterLogin(intendedDestination);
+    }
+    setCurrentPage('login');
   };
 
   // ----------------------------------------------------------------
@@ -248,11 +266,11 @@ export default function App() {
 
           return (
             <div className="min-h-screen bg-white font-sans text-slate-900">
-              <HomeownerNavbar onNavigate={setCurrentPage} onLogout={handleLogout} />
+              <ContractorNavbar onNavigate={setCurrentPage} onLogout={handleLogout} />
               <main>
                 {renderPublicContent()}
               </main>
-              <Footer />
+              <Footer onNavigate={setCurrentPage} />
             </div>
           );
         }
@@ -359,7 +377,7 @@ export default function App() {
         return <ProjectDetails 
           onBack={() => setCurrentPage('projects')} 
           isAuthenticated={false}
-          onLoginRequired={() => setCurrentPage('login')}
+          onLoginRequired={() => handleLoginRequired('project-details')}
         />;
       case 'about':
         return <AboutUs />;

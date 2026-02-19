@@ -1,4 +1,4 @@
-import { Bell, MessageSquare, Settings, LogOut, User } from 'lucide-react';
+import { Bell, MessageSquare, Settings, LogOut, User, FileText, CheckCircle, TrendingUp } from 'lucide-react';
 import svgPaths from "../../imports/svg-ku0djt9ewm";
 import { 
   DropdownMenu, 
@@ -40,7 +40,7 @@ export function ContractorNavbar({ onNavigate, onLogout }: ContractorNavbarProps
             Home
           </button>
           <button 
-            onClick={() => onNavigate('available-projects')}
+            onClick={() => onNavigate('projects')}
             className="text-white hover:text-[#f9a825] transition-colors px-4 py-2"
           >
             Browse Projects
@@ -55,10 +55,67 @@ export function ContractorNavbar({ onNavigate, onLogout }: ContractorNavbarProps
 
         {/* Right Side Icons */}
         <div className="flex items-center gap-4">
-          <button className="text-white hover:text-[#f9a825] transition-colors p-2 relative">
-            <Bell className="size-5" />
-            <span className="absolute top-1 right-1 size-2 bg-red-500 rounded-full" />
-          </button>
+          {/* Notifications */}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="outline-none">
+              <button className="text-white hover:text-[#f9a825] transition-colors p-2 relative">
+                <Bell className="size-5" />
+                <span className="absolute top-1 right-1 size-2 bg-red-500 rounded-full" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-80">
+              <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              
+              <div className="max-h-96 overflow-y-auto">
+                <DropdownMenuItem className="cursor-pointer p-3 flex-col items-start gap-1">
+                  <div className="flex items-start gap-2 w-full">
+                    <div className="size-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <CheckCircle className="size-4 text-green-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-sm">Bid accepted!</p>
+                      <p className="text-xs text-slate-600">Jane accepted your bid for "Modern Kitchen Renovation"</p>
+                      <p className="text-xs text-slate-500 mt-1">1 hour ago</p>
+                    </div>
+                  </div>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem className="cursor-pointer p-3 flex-col items-start gap-1">
+                  <div className="flex items-start gap-2 w-full">
+                    <div className="size-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <FileText className="size-4 text-blue-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-sm">New project posted</p>
+                      <p className="text-xs text-slate-600">Bathroom Remodel in Austin, TX - Budget: $28,000</p>
+                      <p className="text-xs text-slate-500 mt-1">3 hours ago</p>
+                    </div>
+                  </div>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem className="cursor-pointer p-3 flex-col items-start gap-1">
+                  <div className="flex items-start gap-2 w-full">
+                    <div className="size-8 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <MessageSquare className="size-4 text-amber-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-sm">New message</p>
+                      <p className="text-xs text-slate-600">John Smith sent you a message about Deck Installation</p>
+                      <p className="text-xs text-slate-500 mt-1">1 day ago</p>
+                    </div>
+                  </div>
+                </DropdownMenuItem>
+              </div>
+
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer justify-center text-[#f9a825] font-medium">
+                View All Notifications
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Messages */}
           <button 
             onClick={() => onNavigate('messages')}
             className="text-white hover:text-[#f9a825] transition-colors p-2 relative"

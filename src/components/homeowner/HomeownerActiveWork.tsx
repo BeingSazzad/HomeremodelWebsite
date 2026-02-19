@@ -1,6 +1,8 @@
 import { CheckCircle, Clock, AlertCircle, MessageSquare, Eye, Calendar, DollarSign } from 'lucide-react';
 import { Button } from '../ui/button';
 import { WorkApprovalButtons } from '../WorkApprovalButtons';
+import { SimplePaymentModal } from '../shared/SimplePaymentModal';
+import { useState } from 'react';
 
 const activeWork = [
   {
@@ -13,7 +15,7 @@ const activeWork = [
     daysRemaining: 24,
     totalBudget: 45000,
     amountPaid: 0,
-    status: 'In Progress', // "In Progress" | "Pending Approval" | "Completed"
+    status: 'Active', // "Active" | "Pending Approval" | "Completed"
     completedDate: null
   },
   {
@@ -32,21 +34,32 @@ const activeWork = [
 ];
 
 export function HomeownerActiveWork({ onViewProject }: { onViewProject: (id: number) => void }) {
-  const handleApprove = (projectId: number) => {
-    console.log('Approve project:', projectId);
-    // Update project status to "Completed" and release payment
+  const [paymentModal, setPaymentModal] = useState<{
+    isOpen: boolean;
+    project: typeof activeWork[0] | null;
+  }>({ isOpen: false, project: null });
+
+  const handleApprove = (project: typeof activeWork[0]) => {
+    // Open payment modal when approving work
+    setPaymentModal({ isOpen: true, project });
+  };
+
+  const handlePaymentComplete = () => {
+    alert('Work approved and payment sent! Project is now complete.');
+    setPaymentModal({ isOpen: false, project: null });
   };
 
   const handleRequestChanges = (projectId: number, message: string) => {
     console.log('Request changes:', projectId, message);
-    // Send message to contractor and change status back to "In Progress"
+    alert(`Changes requested: ${message}`);
+    // Send message to contractor and change status back to "Active"
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Completed': return 'bg-green-500 text-white';
       case 'Pending Approval': return 'bg-blue-500 text-white';
-      case 'In Progress': return 'bg-yellow-500 text-white';
+      case 'Active': return 'bg-yellow-500 text-white';
       default: return 'bg-slate-300 text-slate-700';
     }
   };
@@ -55,7 +68,7 @@ export function HomeownerActiveWork({ onViewProject }: { onViewProject: (id: num
     switch (status) {
       case 'Completed': return <CheckCircle className="size-4" />;
       case 'Pending Approval': return <Clock className="size-4" />;
-      case 'In Progress': return <Clock className="size-4" />;
+      case 'Active': return <Clock className="size-4" />;
       default: return <AlertCircle className="size-4" />;
     }
   };
@@ -75,7 +88,7 @@ export function HomeownerActiveWork({ onViewProject }: { onViewProject: (id: num
             <Clock className="size-6 text-white" />
           </div>
           <p className="text-sm text-slate-600 mb-1">Active Projects</p>
-          <p className="text-3xl font-bold text-slate-900">{activeWork.filter(p => p.status === 'In Progress').length}</p>
+          <p className="text-3xl font-bold text-slate-900">{activeWork.filter(p => p.status === 'Active').length}</p>
         </div>
 
         <div className="bg-[#fffbf0] border border-[#f9a825]/20 rounded-xl p-6">
@@ -142,7 +155,7 @@ export function HomeownerActiveWork({ onViewProject }: { onViewProject: (id: num
               {/* Project Body */}
               <div className="p-6">
                 {/* Status Messages */}
-                {project.status === 'In Progress' && (
+                {project.status === 'Active' && (
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                     <p className="text-blue-900 font-semibold mb-1">Work in progress</p>
                     <p className="text-sm text-blue-700">
@@ -205,7 +218,7 @@ export function HomeownerActiveWork({ onViewProject }: { onViewProject: (id: num
                       projectTitle={project.projectTitle}
                       contractorName={project.contractor}
                       amount={project.totalBudget}
-                      onApprove={() => handleApprove(project.id)}
+                      onApprove={() => handleApprove(project)}
                       onRequestChanges={(msg) => handleRequestChanges(project.id, msg)}
                     />
                   )}
@@ -238,6 +251,18 @@ export function HomeownerActiveWork({ onViewProject }: { onViewProject: (id: num
           <h3 className="text-xl font-semibold text-slate-900 mb-2">No active projects</h3>
           <p className="text-slate-500">Your ongoing projects will appear here</p>
         </div>
+      )}
+
+      {/* Payment Modal */}
+      {paymentModal.isOpen && paymentModal.project && (
+        <SimplePaymentModal
+          isOpen={paymentModal.isOpen}
+          onClose={() => setPaymentModal({ isOpen: false, project: null })}
+          projectTitle={paymentModal.project.projectTitle}
+          contractorName={paymentModal.project.contractor}
+          amount={paymentModal.project.totalBudget}
+          onPaymentComplete={handlePaymentComplete}
+        />
       )}
     </div>
   );

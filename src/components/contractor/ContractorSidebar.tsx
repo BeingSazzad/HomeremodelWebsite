@@ -56,9 +56,8 @@ export function ContractorSidebar({ activePage, onNavigate }: ContractorSidebarP
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = activePage === item.id || 
-            (item.id === 'profile' && activePage === 'profile') ||
-            (item.id === 'my-projects' && (activePage === 'dashboard' || activePage === 'contractor-project-details')) ||
-            (item.id === 'my-bids' && (activePage === 'my-bids' || activePage === 'bid-details'));
+            (item.id === 'my-bids' && activePage === 'bid-details') ||
+            (item.id === 'my-projects' && activePage === 'contractor-project-details');
           
           return (
             <button

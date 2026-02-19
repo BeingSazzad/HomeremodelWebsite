@@ -2,11 +2,11 @@ import React from 'react';
 import { Star, MapPin, CheckCircle, Award, ArrowRight } from 'lucide-react';
 import { ContractorCard } from '../shared/ContractorCard';
 
-// Import images for contractors - Using Unsplash for real images
-const imgC1 = "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop";
-const imgC2 = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop";
-const imgC3 = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop";
-const imgC4 = "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop";
+// Import images for contractors - Using verified professional headshot photos
+const imgC1 = "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&h=200&q=80";
+const imgC2 = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&h=200&q=80";
+const imgC3 = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&h=200&q=80";
+const imgC4 = "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&h=200&q=80";
 
 const contractors = [
   {

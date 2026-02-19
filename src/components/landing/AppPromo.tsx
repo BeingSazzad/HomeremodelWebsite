@@ -1,8 +1,8 @@
 import React from 'react';
 import svgPaths from "../../imports/svg-9yizay6lrh";
 
-// Using Unsplash image for app mockup
-const imgApp = "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500&h=600&fit=crop";
+// Using verified Unsplash image for app mockup
+const imgApp = "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=500&h=600&q=80";
 
 // SVG Components for Store Badges
 const GooglePlayBadge = () => (

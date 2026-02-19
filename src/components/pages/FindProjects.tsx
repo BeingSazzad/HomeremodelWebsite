@@ -4,12 +4,12 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { ProjectCard } from '../shared/ProjectCard';
 
-// Using Unsplash images for projects
-const img1 = "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400&h=300&fit=crop";
-const img2 = "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop";
-const img3 = "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop";
-const img4 = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop";
-const img5 = "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop";
+// Using verified Unsplash images for projects
+const img1 = "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=400&h=300&q=80";
+const img2 = "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=400&h=300&q=80";
+const img3 = "https://images.unsplash.com/photo-1556912167-f556f1f39faa?auto=format&fit=crop&w=400&h=300&q=80";
+const img4 = "https://images.unsplash.com/photo-1556912173-46c336c7fd55?auto=format&fit=crop&w=400&h=300&q=80";
+const img5 = "https://images.unsplash.com/photo-1556909172-54557c7e4fb7?auto=format&fit=crop&w=400&h=300&q=80";
 
 // Generate more dummy data
 const allProjects = [
@@ -44,7 +44,7 @@ export function FindProjects({ onNavigate }: FindProjectsProps) {
             <div className="bg-gradient-to-br from-[#fffbf0] to-white border-b border-slate-200 pb-12">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="mb-8">
-                        <h1 className="text-4xl font-bold text-slate-900 mb-3">Find Projects</h1>
+                        <h1 className="text-4xl font-bold text-slate-900 mb-3">Browse Projects</h1>
                         <p className="text-slate-600 text-lg">Browse available renovation projects and submit your quotes</p>
                     </div>
 

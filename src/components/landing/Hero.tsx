@@ -14,7 +14,7 @@ export function Hero({ onSearch, onGetStarted }: HeroProps) {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img 
-          src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1920&h=1080&fit=crop" 
+          src="https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1920&h=1080&q=80" 
           alt="Home Remodeling" 
           className="w-full h-full object-cover"
         />

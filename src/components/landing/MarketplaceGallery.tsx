@@ -1,14 +1,14 @@
 import React from 'react';
 
-// Using Unsplash images for gallery
-const imgA = "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop";
-const imgB = "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400&h=300&fit=crop";
-const imgC = "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop";
-const imgD = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop";
-const imgE = "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop";
-const imgF = "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=400&h=300&fit=crop";
-const imgG = "https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=400&h=300&fit=crop";
-const imgH = "https://images.unsplash.com/photo-1556912173-3bb406ef7e77?w=400&h=300&fit=crop";
+// Using verified Unsplash images for gallery
+const imgA = "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=400&h=300&q=80";
+const imgB = "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=400&h=300&q=80";
+const imgC = "https://images.unsplash.com/photo-1556912167-f556f1f39faa?auto=format&fit=crop&w=400&h=300&q=80";
+const imgD = "https://images.unsplash.com/photo-1556912173-46c336c7fd55?auto=format&fit=crop&w=400&h=300&q=80";
+const imgE = "https://images.unsplash.com/photo-1556909172-54557c7e4fb7?auto=format&fit=crop&w=400&h=300&q=80";
+const imgF = "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=400&h=300&q=80";
+const imgG = "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=400&h=300&q=80";
+const imgH = "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=400&h=300&q=80";
 
 const galleryImages = [
   { src: imgA, alt: "Modern kitchen renovation", tall: false },

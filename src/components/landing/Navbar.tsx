@@ -53,10 +53,10 @@ export function Navbar({ onNavigate, currentPage, onLogin }: NavbarProps) {
         </div>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden md:flex items-center gap-8">
           <a onClick={() => onNavigate('home')} className={linkClass('home')}>Home</a>
           <a onClick={() => onNavigate('about')} className={linkClass('about')}>About Us</a>
-          <a onClick={() => onNavigate('projects')} className={linkClass('projects')}>Find Projects</a>
+          <a onClick={() => onNavigate('projects')} className={linkClass('projects')}>Browse Projects</a>
           <a onClick={() => onNavigate('contact')} className={linkClass('contact')}>Contact</a>
         </div>
 
@@ -90,7 +90,7 @@ export function Navbar({ onNavigate, currentPage, onLogin }: NavbarProps) {
                     <div className="flex flex-col gap-6 mt-8">
                         <a onClick={() => onNavigate('home')} className="text-lg font-medium hover:text-[#f9a825] cursor-pointer">Home</a>
                         <a onClick={() => onNavigate('about')} className="text-lg font-medium hover:text-[#f9a825] cursor-pointer">About Us</a>
-                        <a onClick={() => onNavigate('projects')} className="text-lg font-medium hover:text-[#f9a825] cursor-pointer">Find Projects</a>
+                        <a onClick={() => onNavigate('projects')} className="text-lg font-medium hover:text-[#f9a825] cursor-pointer">Browse Projects</a>
                         <a onClick={() => onNavigate('contact')} className="text-lg font-medium hover:text-[#f9a825] cursor-pointer">Contact</a>
                         <div className="h-px bg-slate-100 my-2" />
                         <Button variant="outline" className="w-full border-[#f9a825] text-[#f9a825]" onClick={() => onNavigate('signup')}>Sign Up</Button>

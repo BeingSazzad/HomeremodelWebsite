@@ -1,10 +1,10 @@
 import React from 'react';
 import { MessageSquare, Activity, Paintbrush, Calculator, Users, Headset } from 'lucide-react';
 
-// Using Unsplash images for features
-const imgFrame2147226608 = "https://images.unsplash.com/photo-1581858722446-d67a40e3d07b?w=400&h=400&fit=crop";
-const imgFrame2147226609 = "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=400&fit=crop";
-const imgFrame2147226610 = "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=400&h=400&fit=crop";
+// Using verified Unsplash images for features
+const imgFrame2147226608 = "https://images.unsplash.com/photo-1581858722446-d67a40e3d07b?auto=format&fit=crop&w=400&h=400&q=80";
+const imgFrame2147226609 = "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=400&h=400&q=80";
+const imgFrame2147226610 = "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=400&h=400&q=80";
 
 const features = [
   {

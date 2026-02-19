@@ -59,8 +59,7 @@ const activeProjects = [
     id: 1,
     title: 'Modern Kitchen Renovation',
     image: 'https://images.unsplash.com/photo-1770063817031-f3b98dff347f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBraXRjaGVuJTIwcmVub3ZhdGlvbiUyMGJlYXV0aWZ1bHxlbnwxfHx8fDE3NzE0NzI4MjZ8MA&ixlib=rb-4.1.0&q=80&w=400',
-    status: 'In Progress',
-    progress: 65,
+    status: 'Active',
     contractor: 'BuildPro Inc.',
     dueDate: 'Mar 15, 2026',
     budget: '$45,000',
@@ -71,7 +70,6 @@ const activeProjects = [
     title: 'Master Bathroom Remodel',
     image: 'https://images.unsplash.com/photo-1758448018619-4cbe2250b9ad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYXRocm9vbSUyMHJlbW9kZWwlMjBsdXh1cnl8ZW58MXx8fHwxNzcxNDY1NzY5fDA&ixlib=rb-4.1.0&q=80&w=400',
     status: 'Bidding',
-    progress: 0,
     contractor: null,
     dueDate: 'Apr 1, 2026',
     budget: '$28,000',
@@ -81,8 +79,7 @@ const activeProjects = [
     id: 3,
     title: 'Deck Installation',
     image: 'https://images.unsplash.com/photo-1759244565958-6a4f485108a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxob21lJTIwZGVjayUyMGluc3RhbGxhdGlvbiUyMG91dGRvb3J8ZW58MXx8fHwxNzcxNDcyODI3fDA&ixlib=rb-4.1.0&q=80&w=400',
-    status: 'Pending Start',
-    progress: 0,
+    status: 'Active',
     contractor: 'Elite Builders',
     dueDate: 'May 20, 2026',
     budget: '$32,000',
@@ -253,7 +250,7 @@ export function HomeownerDashboardHome({ onNavigate }: { onNavigate: (page: stri
                 <CheckCircle className="size-5 text-white" />
               </div>
               <div className="flex-1">
-                <p className="font-semibold text-slate-900">Milestone completed</p>
+                <p className="font-semibold text-slate-900">Work update received</p>
                 <p className="text-sm text-slate-600">Kitchen framing completed by BuildPro Inc.</p>
                 <p className="text-xs text-slate-500 mt-1">2 days ago</p>
               </div>
@@ -303,15 +300,15 @@ export function HomeownerDashboardHome({ onNavigate }: { onNavigate: (page: stri
               className="border border-slate-200 rounded-xl overflow-hidden hover:shadow-lg transition-all cursor-pointer group"
               onClick={() => onNavigate('project-details-view')}
             >
-              <div className="relative h-48 overflow-hidden">
+              <div className="relative h-40 overflow-hidden">
                 <img 
                   src={project.image} 
                   alt={project.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <div className="absolute top-3 right-3">
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    project.status === 'In Progress' 
+                <div className="absolute top-2 right-2">
+                  <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                    project.status === 'Active' 
                       ? 'bg-blue-500 text-white' 
                       : project.status === 'Bidding'
                       ? 'bg-[#f9a825] text-white'
@@ -321,54 +318,36 @@ export function HomeownerDashboardHome({ onNavigate }: { onNavigate: (page: stri
                   </span>
                 </div>
               </div>
-              <div className="p-5">
-                <h3 className="font-bold text-slate-900 mb-3">{project.title}</h3>
+              <div className="p-3">
+                <h3 className="font-bold text-slate-900 mb-2 line-clamp-1">{project.title}</h3>
                 
                 {project.contractor && (
-                  <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
-                    <CheckCircle className="size-4 text-green-500" />
-                    <span>{project.contractor}</span>
+                  <div className="flex items-center gap-1 text-xs text-slate-600 mb-1">
+                    <CheckCircle className="size-3 text-green-500" />
+                    <span className="line-clamp-1">{project.contractor}</span>
                   </div>
                 )}
                 
-                <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
-                  <Calendar className="size-4" />
-                  <span>Due: {project.dueDate}</span>
-                </div>
-                
-                <div className="flex items-center gap-2 text-sm text-slate-600 mb-3">
-                  <DollarSign className="size-4" />
-                  <span>Budget: {project.budget}</span>
-                </div>
-
-                {project.status === 'Bidding' && (
-                  <div className="flex items-center gap-2 text-sm font-medium text-[#f9a825] mb-3">
-                    <FileText className="size-4" />
-                    <span>{project.bidsReceived} Bids Received</span>
+                <div className="flex items-center gap-3 text-xs text-slate-600 mb-2">
+                  <div className="flex items-center gap-1">
+                    <DollarSign className="size-3" />
+                    <span>{project.budget}</span>
                   </div>
-                )}
-
-                {project.status === 'In Progress' && (
-                  <div className="mt-3">
-                    <div className="flex items-center justify-between text-xs text-slate-600 mb-2">
-                      <span>Progress</span>
-                      <span className="font-semibold">{project.progress}%</span>
+                  
+                  {project.status === 'Bidding' && (
+                    <div className="flex items-center gap-1 text-[#f9a825]">
+                      <FileText className="size-3" />
+                      <span>{project.bidsReceived} bids</span>
                     </div>
-                    <div className="w-full bg-slate-100 rounded-full h-2">
-                      <div 
-                        className="bg-gradient-to-r from-green-500 to-[#f9a825] h-2 rounded-full transition-all"
-                        style={{ width: `${project.progress}%` }}
-                      />
-                    </div>
-                  </div>
-                )}
+                  )}
+                </div>
 
                 <Button 
-                  className="w-full mt-4 bg-slate-900 hover:bg-slate-800 text-white"
+                  className="w-full bg-slate-900 hover:bg-slate-800 text-white"
                   size="sm"
                 >
-                  <Eye className="size-4 mr-2" />
-                  View Details
+                  <Eye className="size-3 mr-1" />
+                  View
                 </Button>
               </div>
             </div>

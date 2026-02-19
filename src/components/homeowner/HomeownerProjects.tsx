@@ -8,12 +8,11 @@ const projects = [
     title: 'Modern Kitchen Renovation',
     description: 'Complete kitchen remodel including cabinets, countertops, and appliances',
     image: 'https://images.unsplash.com/photo-1770063817031-f3b98dff347f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBraXRjaGVuJTIwcmVub3ZhdGlvbiUyMGJlYXV0aWZ1bHxlbnwxfHx8fDE3NzE0NzI4MjZ8MA&ixlib=rb-4.1.0&q=80&w=400',
-    status: 'In Progress',
+    status: 'Active',
     category: 'Kitchen',
     budget: '$45,000',
     bidsReceived: 8,
     contractor: 'BuildPro Inc.',
-    progress: 65,
     postedDate: 'Jan 5, 2026',
     dueDate: 'Mar 15, 2026'
   },
@@ -27,7 +26,6 @@ const projects = [
     budget: '$28,000',
     bidsReceived: 12,
     contractor: null,
-    progress: 0,
     postedDate: 'Feb 10, 2026',
     dueDate: 'Apr 1, 2026'
   },
@@ -36,12 +34,11 @@ const projects = [
     title: 'Deck Installation',
     description: 'New composite deck with pergola and outdoor lighting',
     image: 'https://images.unsplash.com/photo-1759244565958-6a4f485108a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxob21lJTIwZGVjayUyMGluc3RhbGxhdGlvbiUyMG91dGRvb3J8ZW58MXx8fHwxNzcxNDcyODI3fDA&ixlib=rb-4.1.0&q=80&w=400',
-    status: 'Pending Start',
+    status: 'Active',
     category: 'Outdoor',
     budget: '$32,000',
     bidsReceived: 5,
     contractor: 'Elite Builders',
-    progress: 0,
     postedDate: 'Jan 28, 2026',
     dueDate: 'May 20, 2026'
   },
@@ -55,7 +52,6 @@ const projects = [
     budget: '$3,500',
     bidsReceived: 6,
     contractor: 'Color Masters',
-    progress: 100,
     postedDate: 'Nov 15, 2025',
     dueDate: 'Dec 20, 2025'
   },
@@ -69,7 +65,6 @@ const projects = [
     budget: '$12,000',
     bidsReceived: 0,
     contractor: null,
-    progress: 0,
     postedDate: 'Feb 18, 2026',
     dueDate: null
   }
@@ -88,9 +83,8 @@ export function HomeownerProjects({ onViewProject }: { onViewProject: (id: numbe
 
   const getStatusBadge = (status: string) => {
     const styles = {
-      'In Progress': 'bg-blue-100 text-blue-700',
+      'Active': 'bg-blue-100 text-blue-700',
       'Bidding': 'bg-[#fffbf0] text-[#f9a825]',
-      'Pending Start': 'bg-purple-100 text-purple-700',
       'Completed': 'bg-green-100 text-green-700',
       'Draft': 'bg-slate-100 text-slate-700'
     };
@@ -127,8 +121,7 @@ export function HomeownerProjects({ onViewProject }: { onViewProject: (id: numbe
             <option value="all">All Status</option>
             <option value="Draft">Draft</option>
             <option value="Bidding">Bidding</option>
-            <option value="Pending Start">Pending Start</option>
-            <option value="In Progress">In Progress</option>
+            <option value="Active">Active</option>
             <option value="Completed">Completed</option>
           </select>
 
@@ -146,7 +139,7 @@ export function HomeownerProjects({ onViewProject }: { onViewProject: (id: numbe
           <p className="text-sm text-slate-600">Total</p>
         </div>
         <div className="bg-blue-50 rounded-lg p-4 text-center border border-blue-200">
-          <p className="text-2xl font-bold text-blue-600">{projects.filter(p => p.status === 'In Progress').length}</p>
+          <p className="text-2xl font-bold text-blue-600">{projects.filter(p => p.status === 'Active').length}</p>
           <p className="text-sm text-slate-600">Active</p>
         </div>
         <div className="bg-[#fffbf0] rounded-lg p-4 text-center border border-[#f9a825]/20">
@@ -186,107 +179,51 @@ export function HomeownerProjects({ onViewProject }: { onViewProject: (id: numbe
               </div>
 
               {/* Content */}
-              <div className="flex-1 p-6">
-                <div className="flex items-start justify-between mb-3">
+              <div className="flex-1 p-4">
+                <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-slate-900 mb-2">{project.title}</h3>
-                    <p className="text-slate-600 text-sm mb-3">{project.description}</p>
+                    <h3 className="font-bold text-slate-900 mb-1">{project.title}</h3>
+                    <p className="text-slate-600 text-sm line-clamp-1">{project.description}</p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
+                <div className="flex items-center gap-4 mb-3 text-sm">
+                  <div className="flex items-center gap-1">
                     <DollarSign className="size-4 text-[#f9a825]" />
-                    <div>
-                      <p className="text-xs text-slate-500">Budget</p>
-                      <p className="font-semibold text-slate-900">{project.budget}</p>
-                    </div>
+                    <span className="font-semibold text-slate-900">{project.budget}</span>
                   </div>
-
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
+                  
+                  <div className="flex items-center gap-1">
                     <FileText className="size-4 text-blue-500" />
-                    <div>
-                      <p className="text-xs text-slate-500">Bids</p>
-                      <p className="font-semibold text-slate-900">{project.bidsReceived}</p>
-                    </div>
+                    <span className="font-semibold text-slate-900">{project.bidsReceived}</span>
                   </div>
 
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
-                    <Calendar className="size-4 text-purple-500" />
-                    <div>
-                      <p className="text-xs text-slate-500">Posted</p>
-                      <p className="font-semibold text-slate-900">{project.postedDate}</p>
-                    </div>
-                  </div>
-
-                  {project.dueDate && (
-                    <div className="flex items-center gap-2 text-sm text-slate-600">
-                      <Calendar className="size-4 text-red-500" />
-                      <div>
-                        <p className="text-xs text-slate-500">Due Date</p>
-                        <p className="font-semibold text-slate-900">{project.dueDate}</p>
-                      </div>
+                  {project.contractor && (
+                    <div className="flex items-center gap-1">
+                      <span className="text-slate-600">→</span>
+                      <span className="font-semibold text-slate-900">{project.contractor}</span>
                     </div>
                   )}
                 </div>
 
-                {project.contractor && (
-                  <div className="mb-4 pb-4 border-b border-slate-200">
-                    <p className="text-xs text-slate-500 mb-1">Contractor</p>
-                    <p className="font-semibold text-slate-900">{project.contractor}</p>
-                  </div>
-                )}
-
-                {project.progress > 0 && (
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between text-sm mb-2">
-                      <span className="text-slate-600">Progress</span>
-                      <span className="font-semibold text-slate-900">{project.progress}%</span>
-                    </div>
-                    <div className="w-full bg-slate-100 rounded-full h-2">
-                      <div 
-                        className="bg-gradient-to-r from-green-500 to-[#f9a825] h-2 rounded-full transition-all"
-                        style={{ width: `${project.progress}%` }}
-                      />
-                    </div>
-                  </div>
-                )}
-
                 {/* Actions */}
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   <Button 
-                    className="bg-slate-900 hover:bg-slate-800 text-white"
+                    className="bg-slate-900 hover:bg-slate-800 text-white flex-1"
                     size="sm"
                     onClick={() => onViewProject(project.id)}
                   >
-                    <Eye className="size-4 mr-2" />
-                    View Details
+                    <Eye className="size-4 mr-1" />
+                    View
                   </Button>
-                  {project.status === 'Bidding' && (
+                  {project.status === 'Bidding' && project.bidsReceived > 0 && (
                     <Button 
-                      className="bg-[#f9a825] hover:bg-[#e69b20] text-white"
+                      className="bg-[#f9a825] hover:bg-[#e69b20] text-white flex-1"
                       size="sm"
                     >
-                      <FileText className="size-4 mr-2" />
-                      Review Bids ({project.bidsReceived})
+                      Review Bids
                     </Button>
                   )}
-                  {project.status === 'Draft' && (
-                    <Button 
-                      variant="outline"
-                      size="sm"
-                    >
-                      <Edit className="size-4 mr-2" />
-                      Continue Editing
-                    </Button>
-                  )}
-                  <Button 
-                    variant="outline"
-                    size="sm"
-                    className="text-red-600 border-red-200 hover:bg-red-50"
-                  >
-                    <Trash2 className="size-4" />
-                  </Button>
                 </div>
               </div>
             </div>

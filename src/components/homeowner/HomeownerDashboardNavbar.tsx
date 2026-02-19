@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger 
 } from '../ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { Plus, MessageSquare, Settings, LogOut, User, Bell } from 'lucide-react';
+import { Plus, MessageSquare, Settings, LogOut, User, Bell, CheckCircle, FileText, DollarSign } from 'lucide-react';
 
 interface HomeownerDashboardNavbarProps {
   onNavigate: (page: string) => void;
@@ -53,10 +53,64 @@ export function HomeownerDashboardNavbar({ onNavigate, onLogout }: HomeownerDash
             </Button>
 
             {/* Notifications */}
-            <button className="relative p-2 hover:bg-slate-100 rounded-full transition-colors">
-              <Bell className="size-5 text-slate-600" />
-              <span className="absolute top-1 right-1 size-2 bg-red-500 rounded-full" />
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="outline-none">
+                <button className="relative p-2 hover:bg-slate-100 rounded-full transition-colors">
+                  <Bell className="size-5 text-slate-600" />
+                  <span className="absolute top-1 right-1 size-2 bg-red-500 rounded-full" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-80">
+                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                
+                <div className="max-h-96 overflow-y-auto">
+                  <DropdownMenuItem className="cursor-pointer p-3 flex-col items-start gap-1">
+                    <div className="flex items-start gap-2 w-full">
+                      <div className="size-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <FileText className="size-4 text-blue-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-semibold text-sm">New bid received</p>
+                        <p className="text-xs text-slate-600">Sarah Williams submitted a bid for "Master Bathroom Remodel"</p>
+                        <p className="text-xs text-slate-500 mt-1">1 day ago</p>
+                      </div>
+                    </div>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem className="cursor-pointer p-3 flex-col items-start gap-1">
+                    <div className="flex items-start gap-2 w-full">
+                      <div className="size-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="size-4 text-green-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-semibold text-sm">Work completed</p>
+                        <p className="text-xs text-slate-600">Kitchen framing completed by BuildPro Inc.</p>
+                        <p className="text-xs text-slate-500 mt-1">2 days ago</p>
+                      </div>
+                    </div>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem className="cursor-pointer p-3 flex-col items-start gap-1">
+                    <div className="flex items-start gap-2 w-full">
+                      <div className="size-8 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <MessageSquare className="size-4 text-amber-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-semibold text-sm">New message</p>
+                        <p className="text-xs text-slate-600">Mike Johnson sent you a message</p>
+                        <p className="text-xs text-slate-500 mt-1">3 days ago</p>
+                      </div>
+                    </div>
+                  </DropdownMenuItem>
+                </div>
+
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer justify-center text-[#f9a825] font-medium">
+                  View All Notifications
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* Messages */}
             <button 

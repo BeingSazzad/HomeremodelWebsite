@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { ArrowRight, Hammer, PenTool, Paintbrush, Home } from 'lucide-react';
 
-// Using Unsplash image for hero
-const imgHero = "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1920&h=1080&fit=crop";
+// Using verified Unsplash image for hero
+const imgHero = "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1920&h=1080&q=80";
 
 interface HomeownerHomeProps {
   onNavigate: (page: string) => void;

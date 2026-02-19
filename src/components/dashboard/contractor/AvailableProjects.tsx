@@ -3,10 +3,10 @@ import { Button } from '../../ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../ui/card';
 import { MapPin, Calendar, DollarSign } from 'lucide-react';
 
-// Using Unsplash images
-const img1 = "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400&h=300&fit=crop";
-const img2 = "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop";
-const img3 = "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop";
+// Using verified Unsplash images
+const img1 = "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=400&h=300&q=80";
+const img2 = "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=400&h=300&q=80";
+const img3 = "https://images.unsplash.com/photo-1556912167-f556f1f39faa?auto=format&fit=crop&w=400&h=300&q=80";
 
 export function AvailableProjects({ onViewDetails }: { onViewDetails: (id: number) => void }) {
   const projects = [

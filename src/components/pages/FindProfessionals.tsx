@@ -5,11 +5,11 @@ import { Input } from '../ui/input';
 import { Checkbox } from '../ui/checkbox';
 import { ContractorCard } from '../shared/ContractorCard';
 
-// Using Unsplash images for contractors
-const imgC1 = "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop";
-const imgC2 = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop";
-const imgC3 = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop";
-const imgC4 = "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop";
+// Using verified Unsplash images for contractors
+const imgC1 = "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&h=200&q=80";
+const imgC2 = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&h=200&q=80";
+const imgC3 = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&h=200&q=80";
+const imgC4 = "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&h=200&q=80";
 
 const allContractors = [
     { id: 1, name: "Shanto Hasan", role: "General Contractor", experience: "10+ Years", rating: 4.9, image: imgC1, tags: ["Top Rated"], reviewCount: 124 },

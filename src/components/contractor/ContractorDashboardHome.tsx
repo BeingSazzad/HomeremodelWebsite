@@ -351,14 +351,13 @@ export function ContractorDashboardHome({ onNavigate }: { onNavigate: (page: str
             </Button>
             <Button
               onClick={() => onNavigate('my-projects')}
-              variant="outline"
-              className="w-full justify-start border-slate-200"
+              className="w-full bg-[#f9a825] hover:bg-[#e39922] text-white justify-start"
             >
-              <CheckCircle className="size-4 mr-2" />
+              <Briefcase className="size-4 mr-2" />
               Manage Projects
             </Button>
             <Button
-              onClick={() => onNavigate('available-projects')}
+              onClick={() => onNavigate('projects')}
               variant="outline"
               className="w-full justify-start border-slate-200"
             >

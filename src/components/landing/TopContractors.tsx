@@ -1,12 +1,12 @@
 import React from 'react';
+import { Star, MapPin, CheckCircle, Award, ArrowRight } from 'lucide-react';
 import { ContractorCard } from '../shared/ContractorCard';
-import { ArrowRight } from 'lucide-react';
 
-// Import images for contractors
-import imgC1 from "figma:asset/897c7bd0f0159a53e2b6dd5a20c620c7adeb8b67.png";
-import imgC2 from "figma:asset/329100cff65a8f7a420cd06bbc44baa04da79791.png";
-import imgC3 from "figma:asset/59d922f53cc68584a5b86e2d188dd821b7ff08b3.png";
-import imgC4 from "figma:asset/c1bc56103fdce1c645141c72fd55574ec0b55d64.png";
+// Import images for contractors - Using Unsplash for real images
+const imgC1 = "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop";
+const imgC2 = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop";
+const imgC3 = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop";
+const imgC4 = "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop";
 
 const contractors = [
   {

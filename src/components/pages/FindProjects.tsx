@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { Input } from '../ui/input';
+import { Search, MapPin, DollarSign, Clock, SlidersHorizontal, ChevronDown, X } from 'lucide-react';
 import { Button } from '../ui/button';
-import { Search, SlidersHorizontal, MapPin, Calendar, DollarSign, Heart } from 'lucide-react';
-import { Checkbox } from '../ui/checkbox';
-import { Slider } from '../ui/slider';
+import { Input } from '../ui/input';
+import { ProjectCard } from '../shared/ProjectCard';
 
-import img1 from "figma:asset/5f0570135bc7b72d5646e12689c066c06bce48b1.png";
-import img2 from "figma:asset/937c83fbfdd95e4d187e27127ac2947796d9beb8.png";
-import img3 from "figma:asset/387b0bea35a1325a72ced3b5cc77c50f66376488.png";
-import img4 from "figma:asset/3d2fe9ddf1199e61125b6450b17b1d8f20b01130.png";
-import img5 from "figma:asset/719820b5045b188699b99ea719c0a7b8226d2e64.png";
+// Using Unsplash images for projects
+const img1 = "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400&h=300&fit=crop";
+const img2 = "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop";
+const img3 = "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop";
+const img4 = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop";
+const img5 = "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop";
 
 // Generate more dummy data
 const allProjects = [
@@ -108,48 +108,16 @@ export function FindProjects({ onNavigate }: FindProjectsProps) {
                 {/* Project Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {allProjects.map(project => (
-                        <div
+                        <ProjectCard
                             key={project.id}
                             onClick={() => onNavigate?.('project-details')}
-                            className="bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group"
-                        >
-                            {/* Image */}
-                            <div className="relative aspect-[4/3] overflow-hidden">
-                                <img
-                                    src={project.image}
-                                    alt={project.title}
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                />
-                                <div className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur px-3 py-1 rounded-full">
-                                    <span className="text-xs font-medium text-white">{project.category}</span>
-                                </div>
-                                <button className="absolute top-3 right-3 size-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center hover:bg-white transition-colors">
-                                    <Heart className="size-4 text-slate-600" />
-                                </button>
-                            </div>
-
-                            {/* Content */}
-                            <div className="p-5">
-                                <h3 className="font-bold text-slate-900 mb-3 line-clamp-2 group-hover:text-[#f9a825] transition-colors">
-                                    {project.title}
-                                </h3>
-
-                                <div className="space-y-2 mb-4">
-                                    <div className="flex items-center gap-2 text-sm text-slate-600">
-                                        <DollarSign className="size-4 text-[#f9a825]" />
-                                        <span className="font-medium">Budget: {project.budget}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2 text-sm text-slate-600">
-                                        <Calendar className="size-4 text-[#f9a825]" />
-                                        <span>Timeline: {project.timeline}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2 text-sm text-slate-600">
-                                        <MapPin className="size-4 text-[#f9a825]" />
-                                        <span>{project.address}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            image={project.image}
+                            title={project.title}
+                            address={project.address}
+                            budget={project.budget}
+                            timeline={project.timeline}
+                            category={project.category}
+                        />
                     ))}
                 </div>
             </div>

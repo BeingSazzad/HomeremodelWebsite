@@ -1,13 +1,13 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
-import { ProjectCard } from '../shared/ProjectCard';
+import { MapPin, Clock, DollarSign, Star, ArrowRight } from 'lucide-react';
+import { Card } from '../ui/card';
 
-// Import images
-import img1 from "figma:asset/5f0570135bc7b72d5646e12689c066c06bce48b1.png";
-import img2 from "figma:asset/937c83fbfdd95e4d187e27127ac2947796d9beb8.png";
-import img3 from "figma:asset/387b0bea35a1325a72ced3b5cc77c50f66376488.png";
-import img4 from "figma:asset/3d2fe9ddf1199e61125b6450b17b1d8f20b01130.png";
-import img5 from "figma:asset/719820b5045b188699b99ea719c0a7b8226d2e64.png";
+// Import images - Using Unsplash for real images
+const img1 = "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400&h=300&fit=crop";
+const img2 = "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop";
+const img3 = "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop";
+const img4 = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop";
+const img5 = "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop";
 
 const projects = [
   {
@@ -75,7 +75,7 @@ export function FeaturedProjects({ onViewAll }: { onViewAll?: () => void }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {projects.slice(0, 4).map((project) => (
-            <ProjectCard 
+            <Card 
               key={project.id}
               title={project.title}
               address={project.address}

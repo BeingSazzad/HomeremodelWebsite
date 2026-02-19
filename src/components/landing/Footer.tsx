@@ -1,6 +1,5 @@
 import React from 'react';
 import { Facebook, Twitter, Instagram, Linkedin, Phone, Mail, MapPin, Home } from 'lucide-react';
-import imgFooterBg from "figma:asset/a2dde8910b8acabea52df5c786de0fb6913be54a.png";
 
 interface FooterProps {
   onNavigate?: (page: string) => void;

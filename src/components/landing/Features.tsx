@@ -1,8 +1,10 @@
 import React from 'react';
 import { MessageSquare, Activity, Paintbrush, Calculator, Users, Headset } from 'lucide-react';
-import imgFrame2147226608 from "figma:asset/8bbdb3b32c9e4efc169eb62b73727348d3244329.png";
-import imgFrame2147226609 from "figma:asset/b1fbd90030be310e77ecf8d1eab1dc3b9ca862da.png";
-import imgFrame2147226610 from "figma:asset/ae4523306b475d49c839c15411987bfb1c286869.png";
+
+// Using Unsplash images for features
+const imgFrame2147226608 = "https://images.unsplash.com/photo-1581858722446-d67a40e3d07b?w=400&h=400&fit=crop";
+const imgFrame2147226609 = "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=400&fit=crop";
+const imgFrame2147226610 = "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=400&h=400&fit=crop";
 
 const features = [
   {

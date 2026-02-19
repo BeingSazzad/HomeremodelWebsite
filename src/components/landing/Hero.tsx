@@ -2,7 +2,6 @@ import React from 'react';
 import { Search, SlidersHorizontal, ArrowRight, CheckCircle } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import imgHeroBanner from "figma:asset/9985c9e16f845e1fdda73b4f27831bb8ce6c736d.png";
 
 interface HeroProps {
   onSearch: () => void;
@@ -15,7 +14,7 @@ export function Hero({ onSearch, onGetStarted }: HeroProps) {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img 
-          src={imgHeroBanner} 
+          src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1920&h=1080&fit=crop" 
           alt="Home Remodeling" 
           className="w-full h-full object-cover"
         />

@@ -1,14 +1,18 @@
 import React from 'react';
 import { Button } from '../../ui/button';
-import { Card, CardContent, CardFooter } from '../../ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../ui/card';
 import { MapPin, Calendar, DollarSign } from 'lucide-react';
-import img1 from "figma:asset/5f0570135bc7b72d5646e12689c066c06bce48b1.png";
-import img2 from "figma:asset/937c83fbfdd95e4d187e27127ac2947796d9beb8.png";
+
+// Using Unsplash images
+const img1 = "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400&h=300&fit=crop";
+const img2 = "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop";
+const img3 = "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop";
 
 export function AvailableProjects({ onViewDetails }: { onViewDetails: (id: number) => void }) {
   const projects = [
     { id: 1, title: "Modern Kitchen Renovation", location: "Billesley", budget: "$7,500 - $10,000", date: "ASAP", image: img1 },
     { id: 2, title: "Living Room Makeover", location: "London", budget: "$12,000+", date: "Next Month", image: img2 },
+    { id: 3, title: "Bathroom Upgrade", location: "Manchester", budget: "$5,000 - $7,500", date: "Next Week", image: img3 },
   ];
 
   return (

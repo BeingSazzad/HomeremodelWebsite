@@ -1,14 +1,14 @@
 import React from 'react';
-import imgA from "figma:asset/c41389781dc1ebac76c4dd751c8db21816046336.png";
-import imgB from "figma:asset/a4398394d01e998b169e32fe1288a430ff0d921b.png";
-import imgC from "figma:asset/2803bce46a5c48eba7a48dc1a585e89e8199c269.png";
-import imgD from "figma:asset/8e54ea7d0951993040ce837014eeaf29c49f44b3.png";
-import imgE from "figma:asset/8651489fc7d61be5c9b9af58a2fbafb3d9a521fb.png";
-import imgF from "figma:asset/cf05fca8cf509cd19864179f6009df3a9f0c4f5b.png";
-import imgG from "figma:asset/33265ec9b6efaf42e2380b258539cdc4cce1ae2a.png";
-import imgH from "figma:asset/b6bbde269bffa759d755c97a4b2c2d415df4375f.png";
-import imgI from "figma:asset/88b86e0812a81221f7c2ab924b408d8efcf48b46.png";
-import imgJ from "figma:asset/8bbdb3b32c9e4efc169eb62b73727348d3244329.png";
+
+// Using Unsplash images for gallery
+const imgA = "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop";
+const imgB = "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400&h=300&fit=crop";
+const imgC = "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=300&fit=crop";
+const imgD = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop";
+const imgE = "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop";
+const imgF = "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=400&h=300&fit=crop";
+const imgG = "https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=400&h=300&fit=crop";
+const imgH = "https://images.unsplash.com/photo-1556912173-3bb406ef7e77?w=400&h=300&fit=crop";
 
 const galleryImages = [
   { src: imgA, alt: "Modern kitchen renovation", tall: false },
@@ -19,8 +19,6 @@ const galleryImages = [
   { src: imgF, alt: "Home addition", tall: false },
   { src: imgG, alt: "Deck construction", tall: false },
   { src: imgH, alt: "Basement finishing", tall: false },
-  { src: imgI, alt: "Flooring installation", tall: false },
-  { src: imgJ, alt: "Full home remodel", tall: true },
 ];
 
 export function MarketplaceGallery() {

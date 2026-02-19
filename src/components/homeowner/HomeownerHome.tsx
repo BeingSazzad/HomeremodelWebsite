@@ -1,8 +1,10 @@
-import React from 'react';
 import { Button } from '../ui/button';
-import { Card, CardContent } from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Badge } from '../ui/badge';
 import { ArrowRight, Hammer, PenTool, Paintbrush, Home } from 'lucide-react';
-import imgHero from "figma:asset/9985c9e16f845e1fdda73b4f27831bb8ce6c736d.png";
+
+// Using Unsplash image for hero
+const imgHero = "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1920&h=1080&fit=crop";
 
 interface HomeownerHomeProps {
   onNavigate: (page: string) => void;

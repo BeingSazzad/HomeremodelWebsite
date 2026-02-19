@@ -22,7 +22,6 @@ import { AboutUs } from './components/pages/AboutUs';
 import { Contact } from './components/pages/Contact';
 import { TermsOfService } from './components/pages/TermsOfService';
 import { PrivacyPolicy } from './components/pages/PrivacyPolicy';
-import { CookiePolicy } from './components/pages/CookiePolicy';
 import { RefundPolicy } from './components/pages/RefundPolicy';
 import { HelpCenter } from './components/pages/HelpCenter';
 
@@ -147,7 +146,7 @@ export default function App() {
               <main>
                 {renderPublicContent()}
               </main>
-              <Footer />
+              <Footer onNavigate={setCurrentPage} />
             </div>
           );
         }
@@ -370,8 +369,6 @@ export default function App() {
         return <TermsOfService />;
       case 'privacy':
         return <PrivacyPolicy />;
-      case 'cookie-policy':
-        return <CookiePolicy />;
       case 'refund-policy':
         return <RefundPolicy />;
       case 'help':

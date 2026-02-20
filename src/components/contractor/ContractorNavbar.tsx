@@ -57,8 +57,8 @@ export function ContractorNavbar({ onNavigate, onLogout }: ContractorNavbarProps
         <div className="flex items-center gap-4">
           {/* Notifications */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="outline-none">
-              <button className="text-white hover:text-[#f9a825] transition-colors p-2 relative">
+            <DropdownMenuTrigger asChild>
+              <button className="text-white hover:text-[#f9a825] transition-colors p-2 relative outline-none">
                 <Bell className="size-5" />
                 <span className="absolute top-1 right-1 size-2 bg-red-500 rounded-full" />
               </button>

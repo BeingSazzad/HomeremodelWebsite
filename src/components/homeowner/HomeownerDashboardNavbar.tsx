@@ -54,8 +54,8 @@ export function HomeownerDashboardNavbar({ onNavigate, onLogout }: HomeownerDash
 
             {/* Notifications */}
             <DropdownMenu>
-              <DropdownMenuTrigger className="outline-none">
-                <button className="relative p-2 hover:bg-slate-100 rounded-full transition-colors">
+              <DropdownMenuTrigger asChild>
+                <button className="relative p-2 hover:bg-slate-100 rounded-full transition-colors outline-none">
                   <Bell className="size-5 text-slate-600" />
                   <span className="absolute top-1 right-1 size-2 bg-red-500 rounded-full" />
                 </button>

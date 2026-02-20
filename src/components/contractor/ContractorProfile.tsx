@@ -29,7 +29,7 @@ interface Certification {
 }
 
 export function ContractorProfile() {
-  const [activeTab, setActiveTab] = useState<'personal' | 'professional' | 'credentials'>('personal');
+  const [activeTab, setActiveTab] = useState<'personal' | 'professional' | 'credentials' | 'pricing'>('personal');
   const [isEditing, setIsEditing] = useState(false);
 
   // Mock data
@@ -170,6 +170,16 @@ export function ContractorProfile() {
             }`}
           >
             Credentials
+          </button>
+          <button
+            onClick={() => setActiveTab('pricing')}
+            className={`px-6 py-2 rounded-xl transition-all font-medium ${
+              activeTab === 'pricing'
+                ? 'bg-white text-slate-900 shadow-sm'
+                : 'text-slate-700 hover:text-slate-900'
+            }`}
+          >
+            Pricing
           </button>
         </div>
 
@@ -519,6 +529,60 @@ export function ContractorProfile() {
                   </Button>
                 </div>
               )}
+            </div>
+
+            {isEditing && (
+              <div className="flex justify-end">
+                <Button className="bg-[#f9a825] hover:bg-[#e69b20] text-white px-8">
+                  Save Changes
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'pricing' && (
+          <div className="space-y-8">
+            {/* Pricing Information */}
+            <div className="bg-white border border-slate-200 rounded-xl p-6">
+              <h2 className="text-lg font-bold text-slate-900 mb-5 flex items-center gap-2">
+                <Award className="size-5 text-[#f9a825]" />
+                Pricing Information
+              </h2>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label>Hourly Rate</Label>
+                  <Input 
+                    defaultValue="$100/hour" 
+                    disabled={!isEditing}
+                    className="h-12"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Minimum Project Size</Label>
+                  <Input 
+                    defaultValue="$5,000" 
+                    disabled={!isEditing}
+                    className="h-12"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Maximum Project Size</Label>
+                  <Input 
+                    defaultValue="$500,000" 
+                    disabled={!isEditing}
+                    className="h-12"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Payment Terms</Label>
+                  <Input 
+                    defaultValue="50% upfront, 50% upon completion" 
+                    disabled={!isEditing}
+                    className="h-12"
+                  />
+                </div>
+              </div>
             </div>
 
             {isEditing && (

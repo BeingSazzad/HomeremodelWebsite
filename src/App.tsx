@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ProjectProvider } from './context/ProjectContext';
 
+// Demo Component
+import { NewFeaturesShowcase } from './components/demo/NewFeaturesShowcase';
+
 // Public Components
 import { Hero } from './components/landing/Hero';
 import { TrustSection } from './components/landing/TrustSection';
@@ -64,6 +67,9 @@ import { ContractorSettings } from './components/contractor/ContractorSettings';
 import { ContractorReviews } from './components/contractor/ContractorReviews';
 import { ContractorDashboardHome } from './components/contractor/ContractorDashboardHome';
 import { ContractorEarnings } from './components/contractor/ContractorEarnings';
+import { DocumentUpload } from './components/contractor/DocumentUpload';
+import { SubscriptionPlans } from './components/contractor/SubscriptionPlans';
+import { TradeAndPricing } from './components/contractor/TradeAndPricing';
 
 export default function App() {
   const [auth, setAuth] = useState<{
@@ -290,8 +296,12 @@ export default function App() {
               return <AvailableProjects onViewDetails={() => setCurrentPage('project-details')} />;
             case 'submit-quote':
               return <SubmitQuote onBack={() => setCurrentPage('available-projects')} onSubmit={() => setCurrentPage('dashboard')} />;
+            case 'documents':
+              return <DocumentUpload />;
             case 'subscription':
-              return <Subscription onSubscribe={() => setCurrentPage('dashboard')} />;
+              return <SubscriptionPlans currentPlan="starter" />;
+            case 'trade-pricing':
+              return <TradeAndPricing />;
             case 'my-quotes':
               return <div className="p-8 text-center text-slate-500">My Quotes page is under construction</div>;
             case 'messages':
@@ -306,7 +316,7 @@ export default function App() {
               return <ContractorProfile />;
             case 'dashboard':
             default:
-              return <ContractorDashboardHome onNavigate={setCurrentPage} />;
+              return <ContractorDashboardHome onNavigate={setCurrentPage} currentPlan="free" />;
           }
         };
 
@@ -371,6 +381,8 @@ export default function App() {
   // ----------------------------------------------------------------
   const renderPublicPage = () => {
     switch (currentPage) {
+      case 'demo':
+        return <NewFeaturesShowcase />;
       case 'projects':
         return <FindProjects onNavigate={setCurrentPage} />;
       case 'project-details':
@@ -422,6 +434,16 @@ export default function App() {
           {renderPublicPage()}
         </main>
         <Footer onNavigate={setCurrentPage} />
+        
+        {/* Demo Access Button */}
+        {currentPage !== 'demo' && (
+          <button
+            onClick={() => setCurrentPage('demo')}
+            className="fixed bottom-4 right-4 z-50 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-full font-bold shadow-2xl hover:scale-110 transition-transform flex items-center gap-2"
+          >
+            🎨 NEW FEATURES DEMO
+          </button>
+        )}
         
         {/* Call to Action for Signup when not logged in */}
         {!auth.isAuthenticated && currentPage === 'home' && (

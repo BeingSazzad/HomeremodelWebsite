@@ -8,7 +8,7 @@ import {
 
 const faqs = [
   {
-    question: "How does Homzz work for homeowners??",
+    question: "How does Homzz work for homeowners?",
     answer: "Simply post your remodeling project with details and photos. Within 24 hours, you'll receive competitive quotes from verified contractors. Review their profiles, ratings, and past work, then choose the best fit for your project. Our platform handles all communication and keeps everything organized in one place."
   },
   {
@@ -70,8 +70,8 @@ export function FAQ() {
             <h3 className="text-2xl font-bold text-slate-900 mb-6">For Homeowners</h3>
             <Accordion type="single" collapsible className="space-y-4">
               {faqs.map((faq, index) => (
-                <AccordionItem
-                  key={index}
+                <AccordionItem 
+                  key={index} 
                   value={`item-${index}`}
                   className="bg-white rounded-xl border border-slate-200 px-6"
                 >
@@ -90,8 +90,8 @@ export function FAQ() {
             <h3 className="text-2xl font-bold text-slate-900 mb-6">For Contractors</h3>
             <Accordion type="single" collapsible className="space-y-4">
               {contractorFaqs.map((faq, index) => (
-                <AccordionItem
-                  key={index}
+                <AccordionItem 
+                  key={index} 
                   value={`contractor-${index}`}
                   className="bg-white rounded-xl border border-slate-200 px-6"
                 >

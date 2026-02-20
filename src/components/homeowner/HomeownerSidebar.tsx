@@ -1,4 +1,4 @@
-import { Home, FolderOpen, DollarSign, Star, Settings, FileText, CheckCircle, Clock, MessageSquare } from 'lucide-react';
+import { Home, FolderOpen, DollarSign, Star, Settings, FileText, CheckCircle, Clock, MessageSquare, Camera } from 'lucide-react';
 
 interface HomeownerSidebarProps {
   activePage: string;
@@ -30,8 +30,8 @@ export function HomeownerSidebar({ activePage, onNavigate }: HomeownerSidebarPro
               className="w-full h-full object-cover"
             />
           </div>
-          <button className="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-lg border border-slate-200 hover:bg-slate-50">
-            <Settings className="size-4 text-slate-600" />
+          <button className="absolute bottom-0 right-0 bg-[#f9a825] rounded-full p-2 shadow-lg border-2 border-white hover:bg-[#e69b20] transition-colors">
+            <Camera className="size-4 text-white" />
           </button>
         </div>
 

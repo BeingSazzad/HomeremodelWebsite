@@ -1,4 +1,4 @@
-import { Home, Calendar, DollarSign, Star, Settings, FileText, MessageSquare } from 'lucide-react';
+import { Home, Calendar, DollarSign, Star, Settings, FileText, MessageSquare, Upload, CreditCard, Camera } from 'lucide-react';
 
 interface ContractorSidebarProps {
   activePage: string;
@@ -11,6 +11,8 @@ export function ContractorSidebar({ activePage, onNavigate }: ContractorSidebarP
     { id: 'my-bids', label: 'My Bids', icon: FileText },
     { id: 'my-projects', label: 'My Projects', icon: Calendar },
     { id: 'messages', label: 'Messages', icon: MessageSquare },
+    { id: 'documents', label: 'Documents', icon: Upload },
+    { id: 'subscription', label: 'Subscription', icon: CreditCard },
     { id: 'earnings', label: 'Earning', icon: DollarSign },
     { id: 'reviews', label: 'Reviews', icon: Star },
     { id: 'settings', label: 'Settings', icon: Settings },
@@ -29,8 +31,8 @@ export function ContractorSidebar({ activePage, onNavigate }: ContractorSidebarP
               className="w-full h-full object-cover"
             />
           </div>
-          <button className="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-lg border border-slate-200 hover:bg-slate-50">
-            <Settings className="size-4 text-slate-600" />
+          <button className="absolute bottom-0 right-0 bg-[#f9a825] rounded-full p-2 shadow-lg border-2 border-white hover:bg-[#e69b20] transition-colors">
+            <Camera className="size-4 text-white" />
           </button>
         </div>
 

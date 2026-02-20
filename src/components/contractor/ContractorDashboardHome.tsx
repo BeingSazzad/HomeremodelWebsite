@@ -9,82 +9,19 @@ import {
   MessageSquare,
   Calendar,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Crown,
+  Lock,
+  Zap
 } from 'lucide-react';
 import { Button } from '../ui/button';
 
-interface StatCardProps {
-  title: string;
-  value: string | number;
-  change?: {
-    value: number;
-    type: 'increase' | 'decrease';
-  };
-  icon: React.ReactNode;
-  bgColor: string;
-  iconColor: string;
+interface ContractorDashboardHomeProps {
+  onNavigate: (page: string) => void;
+  currentPlan?: 'free' | 'starter' | 'pro';
 }
 
-function StatCard({ title, value, change, icon, bgColor, iconColor }: StatCardProps) {
-  return (
-    <div className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-lg transition-all">
-      <div className="flex items-start justify-between mb-4">
-        <div className={`size-12 ${bgColor} rounded-lg flex items-center justify-center`}>
-          <div className={iconColor}>
-            {icon}
-          </div>
-        </div>
-        {change && (
-          <div className={`flex items-center gap-1 text-sm font-medium ${
-            change.type === 'increase' ? 'text-green-600' : 'text-red-600'
-          }`}>
-            {change.type === 'increase' ? (
-              <ArrowUpRight className="size-4" />
-            ) : (
-              <ArrowDownRight className="size-4" />
-            )}
-            <span>{change.value}%</span>
-          </div>
-        )}
-      </div>
-      <h3 className="text-2xl font-bold text-slate-900 mb-1">{value}</h3>
-      <p className="text-sm text-slate-500">{title}</p>
-    </div>
-  );
-}
-
-interface RecentReview {
-  id: string;
-  homeownerName: string;
-  homeownerAvatar: string;
-  rating: number;
-  date: string;
-  reviewText: string;
-  replied: boolean;
-}
-
-const mockRecentReviews: RecentReview[] = [
-  {
-    id: '1',
-    homeownerName: 'Sarah Martinez',
-    homeownerAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
-    rating: 5,
-    date: '2 days ago',
-    reviewText: 'Exceptional work on our kitchen renovation! Highly professional and delivered on time.',
-    replied: false
-  },
-  {
-    id: '2',
-    homeownerName: 'Michael Chen',
-    homeownerAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
-    rating: 5,
-    date: '5 days ago',
-    reviewText: 'Amazing transformation of our bathroom. The attention to detail was impressive!',
-    replied: true
-  }
-];
-
-export function ContractorDashboardHome({ onNavigate }: { onNavigate: (page: string) => void }) {
+export function ContractorDashboardHome({ onNavigate, currentPlan = 'free' }: ContractorDashboardHomeProps) {
   const [selectedYear, setSelectedYear] = useState<number>(2026);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyText, setReplyText] = useState('');
@@ -138,6 +75,76 @@ export function ContractorDashboardHome({ onNavigate }: { onNavigate: (page: str
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Dashboard Overview</h1>
         <p className="text-slate-500">Welcome back, John! Here's what's happening with your business.</p>
       </div>
+
+      {/* Subscription Banner */}
+      {currentPlan === 'free' && (
+        <div className="bg-gradient-to-r from-[#f9a825] to-[#e69b20] rounded-xl p-6 mb-8 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="size-16 bg-white/20 rounded-full flex items-center justify-center">
+                <Lock className="size-8 text-white" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-1">Free Plan - Limited Access</h3>
+                <p className="text-white/90">You've used 1 of 2 quotes this month. Upgrade to unlock unlimited quotes!</p>
+              </div>
+            </div>
+            <Button
+              onClick={() => onNavigate('subscription')}
+              className="bg-white text-[#f9a825] hover:bg-white/90 font-semibold px-6"
+            >
+              <Crown className="size-4 mr-2" />
+              Upgrade Now
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {currentPlan === 'starter' && (
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-6 mb-8 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="size-16 bg-white/20 rounded-full flex items-center justify-center">
+                <Zap className="size-8 text-white" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-1">Starter Plan Active</h3>
+                <p className="text-white/90">Upgrade to Pro for priority routing and verified badge!</p>
+              </div>
+            </div>
+            <Button
+              onClick={() => onNavigate('subscription')}
+              className="bg-white text-blue-600 hover:bg-white/90 font-semibold px-6"
+            >
+              <Crown className="size-4 mr-2" />
+              Upgrade to Pro
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {currentPlan === 'pro' && (
+        <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-6 mb-8 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="size-16 bg-white/20 rounded-full flex items-center justify-center">
+                <Crown className="size-8 text-white" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-1">Pro Plan Active ⚡</h3>
+                <p className="text-white/90">You have access to all premium features including priority routing!</p>
+              </div>
+            </div>
+            <Button
+              onClick={() => onNavigate('subscription')}
+              variant="outline"
+              className="border-white text-white hover:bg-white/20 font-semibold px-6"
+            >
+              Manage Plan
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

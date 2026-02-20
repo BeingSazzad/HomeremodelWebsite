@@ -11,7 +11,6 @@ interface Review {
   projectType: string;
   reviewText: string;
   photos?: string[];
-  helpful: number;
   contractorResponse?: string;
 }
 
@@ -28,7 +27,6 @@ const mockReviews: Review[] = [
       'https://images.unsplash.com/photo-1762811003338-aef30274513b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBraXRjaGVuJTIwcmVub3ZhdGlvbiUyMGludGVyaW9yJTIwd2hpdGUlMjBjYWJpbmV0c3xlbnwxfHx8fDE3NzE0NjkzNTF8MA&ixlib=rb-4.1.0&q=80&w=300',
       'https://images.unsplash.com/photo-1758548157243-f4ef3e614684?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBraXRjaGVuJTIwaW50ZXJpb3IlMjB3aGl0ZSUyMHdvb2QlMjBjYWJpbmV0c3xlbnwxfHx8fDE3NzE0NjkzODl8MA&ixlib=rb-4.1.0&q=80&w=300',
     ],
-    helpful: 12,
     contractorResponse: 'Thank you so much, Sarah! It was a pleasure working with you and your family. We\'re thrilled you love the new kitchen!'
   },
   {
@@ -39,7 +37,6 @@ const mockReviews: Review[] = [
     date: 'Jan 28, 2026',
     projectType: 'Bathroom Remodel',
     reviewText: 'Outstanding work! John transformed our outdated bathroom into a modern spa-like retreat. Communication was excellent throughout the project, and the craftsmanship is top-notch.',
-    helpful: 8
   },
   {
     id: '3',
@@ -49,7 +46,6 @@ const mockReviews: Review[] = [
     date: 'Jan 15, 2026',
     projectType: 'Basement Finishing',
     reviewText: 'Great experience overall. The project was completed on time and looks fantastic. Minor communication hiccups at the beginning, but everything was resolved quickly.',
-    helpful: 5
   },
   {
     id: '4',
@@ -62,7 +58,6 @@ const mockReviews: Review[] = [
     photos: [
       'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=300&h=200&fit=crop'
     ],
-    helpful: 15
   },
   {
     id: '5',
@@ -72,13 +67,12 @@ const mockReviews: Review[] = [
     date: 'Dec 5, 2025',
     projectType: 'Kitchen Renovation',
     reviewText: 'Absolutely love our new kitchen! John provided excellent guidance on design choices and material selection. The project stayed on schedule and within budget.',
-    helpful: 10
   }
 ];
 
 export function ContractorReviews() {
   const [filterRating, setFilterRating] = useState<number | 'all'>('all');
-  const [sortBy, setSortBy] = useState<'recent' | 'helpful' | 'rating'>('recent');
+  const [sortBy, setSortBy] = useState<'recent' | 'rating'>('recent');
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
 
   // Calculate rating breakdown
@@ -97,7 +91,6 @@ export function ContractorReviews() {
 
   filteredReviews = [...filteredReviews].sort((a, b) => {
     if (sortBy === 'recent') return new Date(b.date).getTime() - new Date(a.date).getTime();
-    if (sortBy === 'helpful') return b.helpful - a.helpful;
     if (sortBy === 'rating') return b.rating - a.rating;
     return 0;
   });
@@ -209,7 +202,7 @@ export function ContractorReviews() {
           >
             <Filter className="size-4" />
             <span className="font-medium text-slate-700">
-              Sort: {sortBy === 'recent' ? 'Most Recent' : sortBy === 'helpful' ? 'Most Helpful' : 'Highest Rating'}
+              Sort: {sortBy === 'recent' ? 'Most Recent' : 'Highest Rating'}
             </span>
             <ChevronDown className="size-4" />
           </button>
@@ -218,7 +211,6 @@ export function ContractorReviews() {
             <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg z-10">
               {[
                 { value: 'recent', label: 'Most Recent' },
-                { value: 'helpful', label: 'Most Helpful' },
                 { value: 'rating', label: 'Highest Rating' }
               ].map(option => (
                 <button
@@ -289,27 +281,11 @@ export function ContractorReviews() {
 
             {/* Contractor Response */}
             {review.contractorResponse && (
-              <div className="bg-[#fffbf0] border border-[#f9a825]/20 rounded-lg p-4 mb-4">
+              <div className="bg-[#fffbf0] border border-[#f9a825]/20 rounded-lg p-4">
                 <p className="text-sm font-semibold text-slate-900 mb-1">Your Response:</p>
                 <p className="text-sm text-slate-700">{review.contractorResponse}</p>
               </div>
             )}
-
-            {/* Review Actions */}
-            <div className="flex items-center gap-4 pt-4 border-t border-slate-100">
-              <button className="flex items-center gap-2 text-sm text-slate-600 hover:text-[#f9a825] transition-colors">
-                <ThumbsUp className="size-4" />
-                <span>Helpful ({review.helpful})</span>
-              </button>
-              {!review.contractorResponse && (
-                <Button
-                  variant="outline"
-                  className="text-sm border-[#f9a825] text-[#f9a825] hover:bg-[#f9a825]/10"
-                >
-                  Respond to Review
-                </Button>
-              )}
-            </div>
           </div>
         ))}
       </div>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Search, Filter, Plus, Calendar, DollarSign, Eye, Edit, Trash2, FileText } from 'lucide-react';
 import { Button } from '../ui/button';
+import { EnhancedJobPosting } from '../projects/EnhancedJobPosting';
 
 const projects = [
   {
@@ -73,6 +74,12 @@ const projects = [
 export function HomeownerProjects({ onViewProject }: { onViewProject: (id: number) => void }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [showNewProjectForm, setShowNewProjectForm] = useState(false);
+
+  // If showing new project form, render that instead
+  if (showNewProjectForm) {
+    return <EnhancedJobPosting />;
+  }
 
   const filteredProjects = projects.filter(project => {
     const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -125,7 +132,7 @@ export function HomeownerProjects({ onViewProject }: { onViewProject: (id: numbe
             <option value="Completed">Completed</option>
           </select>
 
-          <Button className="bg-[#f9a825] hover:bg-[#e69b20] text-white">
+          <Button className="bg-[#f9a825] hover:bg-[#e69b20] text-white" onClick={() => setShowNewProjectForm(true)}>
             <Plus className="size-4 mr-2" />
             New Project
           </Button>

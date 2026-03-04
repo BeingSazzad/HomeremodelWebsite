@@ -11,7 +11,8 @@ import {
   File,
   CheckCheck,
   Check,
-  Clock
+  Clock,
+  Lock
 } from 'lucide-react';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
@@ -25,6 +26,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { Badge } from '../ui/badge';
+import { LockedMessaging } from './LockedMessaging';
 
 interface Message {
   id: string;
@@ -46,6 +48,10 @@ interface Conversation {
   unreadCount: number;
   projectName?: string;
   online: boolean;
+  chatStatus: 'locked' | 'pending' | 'active' | 'declined'; // NEW: Track chat status
+  city?: string; // NEW: For contractors to see
+  fullAddress?: string; // NEW: Only revealed after acceptance
+  initialQuoteMessage?: string; // NEW: The ONE message from contractor
 }
 
 interface MessagingSystemProps {
@@ -59,7 +65,7 @@ export function MessagingSystem({ currentUserId, userRole }: MessagingSystemProp
   const [searchQuery, setSearchQuery] = useState('');
 
   // Mock data - in real app, this would come from backend
-  const conversations: Conversation[] = [
+  const [conversations, setConversations] = useState<Conversation[]>([
     {
       id: '1',
       name: userRole === 'homeowner' ? 'Premium Renovations Inc.' : 'Sarah Mitchell',
@@ -68,7 +74,11 @@ export function MessagingSystem({ currentUserId, userRole }: MessagingSystemProp
       lastMessageTime: new Date(Date.now() - 1000 * 60 * 15),
       unreadCount: 2,
       projectName: 'Kitchen Remodel',
-      online: true
+      online: true,
+      chatStatus: 'active',
+      city: 'New York',
+      fullAddress: '123 Main St, New York, NY 10001',
+      initialQuoteMessage: 'Hi! I reviewed your project details and I am very interested. I have 15+ years of experience in kitchen remodeling.'
     },
     {
       id: '2',
@@ -78,7 +88,11 @@ export function MessagingSystem({ currentUserId, userRole }: MessagingSystemProp
       lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 2),
       unreadCount: 0,
       projectName: 'Bathroom Renovation',
-      online: false
+      online: false,
+      chatStatus: 'pending',
+      city: 'Austin, TX',
+      fullAddress: '456 Oak Ave, Austin, TX 78701',
+      initialQuoteMessage: 'Hi! I reviewed your bathroom renovation project and would love to work with you. I have over 10 years of experience in bathroom remodeling and can provide high-quality work within your budget. My quote includes all materials and labor. Looking forward to discussing this further!'
     },
     {
       id: '3',
@@ -88,9 +102,10 @@ export function MessagingSystem({ currentUserId, userRole }: MessagingSystemProp
       lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 24),
       unreadCount: 1,
       projectName: 'Basement Finishing',
-      online: true
+      online: true,
+      chatStatus: 'active'
     },
-  ];
+  ]);
 
   const messages: Record<string, Message[]> = {
     '1': [
@@ -148,6 +163,28 @@ export function MessagingSystem({ currentUserId, userRole }: MessagingSystemProp
 
   const selectedConv = conversations.find(c => c.id === selectedConversation);
   const selectedMessages = selectedConversation ? (messages[selectedConversation] || []) : [];
+
+  // Handle accepting chat - changes status to 'active'
+  const handleAcceptChat = (conversationId: string) => {
+    setConversations(prevConvs =>
+      prevConvs.map(conv =>
+        conv.id === conversationId
+          ? { ...conv, chatStatus: 'active' as const }
+          : conv
+      )
+    );
+  };
+
+  // Handle declining chat - changes status to 'declined'
+  const handleDeclineChat = (conversationId: string) => {
+    setConversations(prevConvs =>
+      prevConvs.map(conv =>
+        conv.id === conversationId
+          ? { ...conv, chatStatus: 'declined' as const }
+          : conv
+      )
+    );
+  };
 
   const handleSendMessage = () => {
     if (!messageInput.trim()) return;
@@ -245,6 +282,27 @@ export function MessagingSystem({ currentUserId, userRole }: MessagingSystemProp
       {/* Chat Area */}
       {selectedConversation ? (
         <div className="flex-1 flex flex-col bg-white">
+          {/* If conversation is in locked/pending/declined state, show LockedMessaging */}
+          {selectedConv && (selectedConv.chatStatus === 'locked' || selectedConv.chatStatus === 'pending' || selectedConv.chatStatus === 'declined') ? (
+            <div className="flex-1 p-6 overflow-y-auto">
+              <LockedMessaging
+                role={userRole}
+                chatStatus={selectedConv.chatStatus}
+                initialMessage={selectedConv.initialQuoteMessage}
+                homeownerName={userRole === 'homeowner' ? currentUserId : selectedConv.name}
+                homeownerCity={selectedConv.city || 'Unknown City'}
+                homeownerFullAddress={selectedConv.fullAddress}
+                contractorName={userRole === 'contractor' ? currentUserId : selectedConv.name}
+                onAcceptChat={() => handleAcceptChat(selectedConv.id)}
+                onDeclineChat={() => handleDeclineChat(selectedConv.id)}
+                onSendMessage={(message) => {
+                  console.log('Message sent:', message);
+                }}
+              />
+            </div>
+          ) : (
+            // Normal active chat interface
+            <>
           {/* Chat Header */}
           <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-white">
             <div className="flex items-center gap-3">
@@ -384,6 +442,8 @@ export function MessagingSystem({ currentUserId, userRole }: MessagingSystemProp
               Press Enter to send, Shift + Enter for new line
             </p>
           </div>
+            </>
+          )}
         </div>
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center text-center p-8 bg-slate-50">

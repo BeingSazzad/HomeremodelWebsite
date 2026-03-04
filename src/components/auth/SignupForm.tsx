@@ -5,6 +5,8 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { ArrowLeft, User, Mail, Lock, Phone, MapPin } from 'lucide-react';
 import { ContractorSignup } from './ContractorSignup';
+import { ContractorSignupFixed } from './ContractorSignupFixed';
+import { ContractorSignupComplete } from './ContractorSignupComplete';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 
 // SVG assets from Figma
@@ -19,7 +21,7 @@ interface SignupFormProps {
 export function SignupForm({ role, onBack, onComplete }: SignupFormProps) {
   if (role === 'contractor') {
     return (
-      <ContractorSignup 
+      <ContractorSignupComplete 
         onComplete={onComplete}
         onLogin={onBack}
       />

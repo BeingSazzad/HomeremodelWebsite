@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ProjectProvider } from './context/ProjectContext';
 
-// Demo Component
-import { NewFeaturesShowcase } from './components/demo/NewFeaturesShowcase';
-
 // Public Components
 import { Hero } from './components/landing/Hero';
 import { TrustSection } from './components/landing/TrustSection';
@@ -35,41 +32,37 @@ import { SignupForm } from './components/auth/SignupForm';
 
 // Homeowner Components
 import { HomeownerNavbar } from './components/homeowner/HomeownerNavbar';
-import { HomeownerHome } from './components/homeowner/HomeownerHome';
 import { HomeownerLayout } from './components/homeowner/HomeownerLayout';
 import { HomeownerDashboardHome } from './components/homeowner/HomeownerDashboardHome';
-import { HomeownerProjects } from './components/homeowner/HomeownerProjects';
+import { HomeownerProjectsEnhanced } from './components/homeowner/HomeownerProjectsEnhanced'; // Enhanced with auto-close
 import { HomeownerReceivedBids } from './components/homeowner/HomeownerReceivedBids';
 import { HomeownerPayments } from './components/homeowner/HomeownerPayments';
 import { HomeownerActiveWork } from './components/homeowner/HomeownerActiveWork';
-import { PostProject } from './components/dashboard/homeowner/PostProject';
 import { ProjectDetailsView } from './components/dashboard/homeowner/ProjectDetailsView';
+import { ContractorProfileView } from './components/homeowner/ContractorProfileView'; // View contractor profiles
+import { EnhancedPostProject } from './components/homeowner/EnhancedPostProject'; // Enhanced project posting
 
-// Dashboard Components (Legacy/Contractor/Admin)
-import { DashboardLayout } from './components/dashboard/DashboardLayout';
-import { HomeownerDashboard } from './components/dashboard/homeowner/HomeownerDashboard';
-import { ContractorDashboard } from './components/dashboard/contractor/ContractorDashboard';
-import { AvailableProjects } from './components/dashboard/contractor/AvailableProjects';
-import { SubmitQuote } from './components/dashboard/contractor/SubmitQuote';
-import { Subscription } from './components/dashboard/contractor/Subscription';
-import { AdminDashboard } from './components/dashboard/admin/AdminDashboard';
-import { ProjectDetails } from './components/contractor/ProjectDetails';
-
-// Contractor Layout Components
+// Contractor Components
 import { ContractorLayout } from './components/contractor/ContractorLayout';
-import { ContractorNavbar } from './components/contractor/ContractorNavbar';
-import { ContractorProfile } from './components/contractor/ContractorProfile';
+import { ContractorDashboardHome } from './components/contractor/ContractorDashboardHome';
+import { ContractorBidsEnhanced } from './components/contractor/ContractorBidsEnhanced'; // Enhanced with proper status flow
 import { ContractorMyProjects } from './components/contractor/ContractorMyProjects';
 import { ContractorProjectDetails } from './components/contractor/ContractorProjectDetails';
-import { ContractorBids } from './components/contractor/ContractorBids';
-import { ContractorBidDetails } from './components/contractor/ContractorBidDetails';
 import { ContractorSettings } from './components/contractor/ContractorSettings';
 import { ContractorReviews } from './components/contractor/ContractorReviews';
-import { ContractorDashboardHome } from './components/contractor/ContractorDashboardHome';
-import { ContractorEarnings } from './components/contractor/ContractorEarnings';
 import { DocumentUpload } from './components/contractor/DocumentUpload';
 import { SubscriptionPlans } from './components/contractor/SubscriptionPlans';
 import { TradeAndPricing } from './components/contractor/TradeAndPricing';
+import { ContractorBilling } from './components/contractor/ContractorBilling';
+import { ProjectDetails } from './components/contractor/ProjectDetails';
+import { HomeownerProfileView } from './components/contractor/HomeownerProfileView'; // View homeowner profiles
+import { JobRoutingSystem } from './components/routing/JobRoutingSystem'; // Job routing component
+import { EnhancedQuoteForm } from './components/contractor/EnhancedQuoteForm'; // Enhanced quote form
+import { PhoneVerification } from './components/auth/PhoneVerification'; // Phone verification
+import { ContractorNavbar } from './components/contractor/ContractorNavbar'; // Contractor public navbar
+import { ContractorBidDetails } from './components/contractor/ContractorBidDetails'; // Bid details view
+import { ContractorEarnings } from './components/contractor/ContractorEarnings'; // Earnings page
+import { ContractorProfile } from './components/contractor/ContractorProfile'; // Profile management
 
 export default function App() {
   const [auth, setAuth] = useState<{
@@ -134,7 +127,7 @@ export default function App() {
           const renderPublicContent = () => {
             switch (currentPage) {
               case 'projects':
-                return <FindProjects onNavigate={setCurrentPage} />;
+                return <FindProjects onNavigate={setCurrentPage} userRole="homeowner" />;
               case 'project-details':
                 return <ProjectDetails 
                   onBack={() => setCurrentPage('projects')} 
@@ -179,13 +172,15 @@ export default function App() {
         const renderHomeownerContent = () => {
           switch (currentPage) {
             case 'my-projects':
-              return <HomeownerProjects onViewProject={(id) => setCurrentPage('project-details-view')} />;
+              return <HomeownerProjectsEnhanced onViewProject={(id) => setCurrentPage('project-details-view')} />;
             case 'project-details-view':
               return <ProjectDetailsView onBack={() => setCurrentPage('my-projects')} onMessageContractor={(id) => setCurrentPage('messages')} />;
             case 'received-bids':
               return <HomeownerReceivedBids onViewBid={(id) => setCurrentPage('bid-details')} />;
             case 'bid-details':
               return <ProjectDetailsView onBack={() => setCurrentPage('received-bids')} onMessageContractor={(id) => setCurrentPage('messages')} />;
+            case 'contractor-profile-view': // View contractor profile
+              return <ContractorProfileView onBack={() => setCurrentPage('received-bids')} onMessage={() => setCurrentPage('messages')} />;
             case 'payments':
               return <HomeownerPayments />;
             case 'active-work':
@@ -197,7 +192,9 @@ export default function App() {
             case 'settings':
               return <Settings userRole="homeowner" />;
             case 'post-project':
-              return <PostProject onCancel={() => setCurrentPage('dashboard')} onSubmit={() => setCurrentPage('my-projects')} />;
+              return <EnhancedPostProject isPhoneVerified={true} onSubmit={() => setCurrentPage('my-projects')} onCancel={() => setCurrentPage('dashboard')} />;
+            case 'phone-verify':
+              return <PhoneVerification userType="homeowner" />;
             case 'dashboard':
             default:
               return <HomeownerDashboardHome onNavigate={setCurrentPage} />;
@@ -217,17 +214,21 @@ export default function App() {
 
     // CONTRACTOR & ADMIN FLOW (Dashboard Sidebar Layout)
     const renderDashboardContent = () => {
-      // ADMIN FLOW
+      // ADMIN FLOW - Not implemented yet
       if (auth.role === 'admin') {
         return (
-          <DashboardLayout 
-            role={auth.role} 
-            activePage={currentPage} 
-            onNavigate={setCurrentPage} 
-            onLogout={handleLogout}
-          >
-            <AdminDashboard />
-          </DashboardLayout>
+          <div className="min-h-screen bg-slate-100 flex items-center justify-center">
+            <div className="bg-white p-8 rounded-xl shadow-lg text-center max-w-md">
+              <h1 className="text-2xl font-bold text-slate-900 mb-4">Admin Dashboard</h1>
+              <p className="text-slate-600 mb-6">Admin panel is under development.</p>
+              <button 
+                onClick={handleLogout}
+                className="bg-[#f9a825] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#e69b20] transition-colors"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
         );
       }
 
@@ -240,7 +241,7 @@ export default function App() {
           const renderPublicContent = () => {
             switch (currentPage) {
               case 'projects':
-                return <FindProjects onNavigate={setCurrentPage} />;
+                return <FindProjects onNavigate={setCurrentPage} userRole="contractor" />;
               case 'project-details':
                 return <ProjectDetails 
                   onBack={() => setCurrentPage('projects')} 
@@ -284,26 +285,38 @@ export default function App() {
         // Dashboard pages for contractors (with sidebar)
         const renderContractorContent = () => {
           switch (currentPage) {
+            case 'job-feed':
+              return <JobRoutingSystem currentContractorId="contractor-123" />;
             case 'my-bids':
-              return <ContractorBids onViewBid={(id) => setCurrentPage('bid-details')} />;
+              return <ContractorBidsEnhanced onViewBid={(id) => setCurrentPage('bid-details')} />;
             case 'bid-details':
-              return <ContractorBidDetails onBack={() => setCurrentPage('my-bids')} onEditQuote={() => setCurrentPage('submit-quote')} />;
+              return <ContractorBidDetails 
+                onBack={() => setCurrentPage('my-bids')} 
+                onEditQuote={() => setCurrentPage('enhanced-quote')}
+                onViewHomeownerProfile={() => setCurrentPage('homeowner-profile-view')} // NEW
+              />;
+            case 'homeowner-profile-view': // NEW: View homeowner profile
+              return <HomeownerProfileView onBack={() => setCurrentPage('bid-details')} onMessage={() => setCurrentPage('messages')} />;
             case 'my-projects':
               return <ContractorMyProjects onViewProject={(id) => setCurrentPage('contractor-project-details')} />;
             case 'contractor-project-details':
               return <ContractorProjectDetails onBack={() => setCurrentPage('my-projects')} />;
+            case 'projects':
             case 'available-projects':
-              return <AvailableProjects onViewDetails={() => setCurrentPage('project-details')} />;
+              return <FindProjects onNavigate={setCurrentPage} userRole="contractor" />;
             case 'submit-quote':
-              return <SubmitQuote onBack={() => setCurrentPage('available-projects')} onSubmit={() => setCurrentPage('dashboard')} />;
+            case 'enhanced-quote':
+              return <EnhancedQuoteForm projectTitle="Bathroom Remodel" onCancel={() => setCurrentPage('projects')} onSubmit={() => setCurrentPage('dashboard')} />;
             case 'documents':
               return <DocumentUpload />;
             case 'subscription':
-              return <SubscriptionPlans currentPlan="starter" />;
+              return <SubscriptionPlans currentPlan="none" currentBilling="monthly" />;
+            case 'billing':
+              return <ContractorBilling currentPlan="none" currentBilling="monthly" onNavigate={setCurrentPage} />;
             case 'trade-pricing':
               return <TradeAndPricing />;
-            case 'my-quotes':
-              return <div className="p-8 text-center text-slate-500">My Quotes page is under construction</div>;
+            case 'phone-verify':
+              return <PhoneVerification userType="contractor" />;
             case 'messages':
               return <Messages userRole="contractor" />;
             case 'earnings':
@@ -316,7 +329,7 @@ export default function App() {
               return <ContractorProfile />;
             case 'dashboard':
             default:
-              return <ContractorDashboardHome onNavigate={setCurrentPage} currentPlan="free" />;
+              return <ContractorDashboardHome onNavigate={setCurrentPage} currentPlan="none" currentBilling="monthly" />;
           }
         };
 
@@ -381,8 +394,6 @@ export default function App() {
   // ----------------------------------------------------------------
   const renderPublicPage = () => {
     switch (currentPage) {
-      case 'demo':
-        return <NewFeaturesShowcase />;
       case 'projects':
         return <FindProjects onNavigate={setCurrentPage} />;
       case 'project-details':
@@ -434,16 +445,6 @@ export default function App() {
           {renderPublicPage()}
         </main>
         <Footer onNavigate={setCurrentPage} />
-        
-        {/* Demo Access Button */}
-        {currentPage !== 'demo' && (
-          <button
-            onClick={() => setCurrentPage('demo')}
-            className="fixed bottom-4 right-4 z-50 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-full font-bold shadow-2xl hover:scale-110 transition-transform flex items-center gap-2"
-          >
-            🎨 NEW FEATURES DEMO
-          </button>
-        )}
         
         {/* Call to Action for Signup when not logged in */}
         {!auth.isAuthenticated && currentPage === 'home' && (

@@ -5,58 +5,105 @@ interface TradeCategory {
   id: string;
   name: string;
   requiresPermit: boolean;
+  type: 'remodel' | 'painting' | 'trade';
 }
 
 const tradeCategories: TradeCategory[] = [
-  { id: 'kitchen', name: 'Kitchen Remodeling', requiresPermit: true },
-  { id: 'bathroom', name: 'Bathroom Remodeling', requiresPermit: true },
-  { id: 'addition', name: 'Room Addition', requiresPermit: true },
-  { id: 'deck', name: 'Deck Installation', requiresPermit: true },
-  { id: 'painting', name: 'Painting', requiresPermit: false },
-  { id: 'flooring', name: 'Flooring', requiresPermit: false },
-  { id: 'roofing', name: 'Roofing', requiresPermit: true },
-  { id: 'plumbing', name: 'Plumbing', requiresPermit: true },
-  { id: 'electrical', name: 'Electrical', requiresPermit: true },
-  { id: 'hvac', name: 'HVAC', requiresPermit: true },
+  { id: 'kitchen', name: 'Kitchen Remodeling', requiresPermit: true, type: 'remodel' },
+  { id: 'bathroom', name: 'Bathroom Remodeling', requiresPermit: true, type: 'remodel' },
+  { id: 'addition', name: 'Room Addition', requiresPermit: true, type: 'remodel' },
+  { id: 'deck', name: 'Deck Installation', requiresPermit: true, type: 'remodel' },
+  { id: 'painting_interior', name: 'Interior Painting', requiresPermit: false, type: 'painting' },
+  { id: 'painting_exterior', name: 'Exterior Painting', requiresPermit: false, type: 'painting' },
+  { id: 'flooring', name: 'Flooring', requiresPermit: false, type: 'remodel' },
+  { id: 'tile', name: 'Tile Work', requiresPermit: false, type: 'remodel' },
+  { id: 'roofing', name: 'Roofing', requiresPermit: true, type: 'trade' },
+  { id: 'plumbing', name: 'Plumbing', requiresPermit: true, type: 'trade' },
+  { id: 'electrical', name: 'Electrical', requiresPermit: true, type: 'trade' },
+  { id: 'hvac', name: 'HVAC', requiresPermit: true, type: 'trade' },
 ];
 
 interface Pricing {
-  laborRateType: 'hourly' | 'per_sqft' | 'fixed' | '';
-  hourlyRate?: number;
-  sqftRate?: number;
-  permitCostIncluded?: boolean;
-  estimatedPermitCost?: number;
+  // General
+  minimumJobFee: string;
+  laborRateType: 'flat' | 'per_sqft' | 'per_linear_ft' | 'per_fixture' | 'per_hour' | '';
+  
+  // Labor Estimate
+  laborLow: string;
+  laborHigh: string;
+  hourlyRate?: string;
+  sqftRate?: string;
+  
+  // Rough Materials
+  roughMaterialsLow: string;
+  roughMaterialsHigh: string;
+  
+  // Finish Materials
+  finishMaterials: 'included' | 'owner_supplied' | '';
+  finishMaterialsAllowanceLow: string;
+  finishMaterialsAllowanceHigh: string;
+  
+  // Permit
+  permitRequired: 'yes' | 'no' | '';
+  permitCostLow: string;
+  permitCostHigh: string;
 }
 
 export function TradeAndPricing() {
   const [selectedTrades, setSelectedTrades] = useState<string[]>([]);
   const [pricing, setPricing] = useState<Record<string, Pricing>>({});
+  const [serviceZipCodes, setServiceZipCodes] = useState<string[]>(['']);
   const [errors, setErrors] = useState<string[]>([]);
 
   const handleTradeToggle = (tradeId: string) => {
     setSelectedTrades(prev => {
       if (prev.includes(tradeId)) {
-        // Remove trade and its pricing
         const newPricing = { ...pricing };
         delete newPricing[tradeId];
         setPricing(newPricing);
         return prev.filter(id => id !== tradeId);
       } else {
-        // Add trade with default pricing
         setPricing(prev => ({
           ...prev,
-          [tradeId]: { laborRateType: '' }
+          [tradeId]: {
+            minimumJobFee: '',
+            laborRateType: '',
+            laborLow: '',
+            laborHigh: '',
+            roughMaterialsLow: '',
+            roughMaterialsHigh: '',
+            finishMaterials: '',
+            finishMaterialsAllowanceLow: '',
+            finishMaterialsAllowanceHigh: '',
+            permitRequired: '',
+            permitCostLow: '',
+            permitCostHigh: ''
+          }
         }));
         return [...prev, tradeId];
       }
     });
   };
 
-  const updatePricing = (tradeId: string, updates: Partial<Pricing>) => {
+  const updatePricing = (tradeId: string, field: keyof Pricing, value: string) => {
     setPricing(prev => ({
       ...prev,
-      [tradeId]: { ...prev[tradeId], ...updates }
+      [tradeId]: { ...prev[tradeId], [field]: value }
     }));
+  };
+
+  const addZipCode = () => {
+    setServiceZipCodes([...serviceZipCodes, '']);
+  };
+
+  const updateZipCode = (index: number, value: string) => {
+    const newZips = [...serviceZipCodes];
+    newZips[index] = value.replace(/\D/g, '').slice(0, 5);
+    setServiceZipCodes(newZips);
+  };
+
+  const removeZipCode = (index: number) => {
+    setServiceZipCodes(serviceZipCodes.filter((_, i) => i !== index));
   };
 
   const validateAndSubmit = () => {
@@ -66,24 +113,63 @@ export function TradeAndPricing() {
       newErrors.push('Please select at least one trade category');
     }
 
+    // Validate ZIP codes
+    const validZips = serviceZipCodes.filter(zip => /^\d{5}$/.test(zip));
+    if (validZips.length === 0) {
+      newErrors.push('Please add at least one valid service ZIP code');
+    }
+
     selectedTrades.forEach(tradeId => {
       const tradePricing = pricing[tradeId];
       const trade = tradeCategories.find(t => t.id === tradeId);
+
+      if (!tradePricing.minimumJobFee) {
+        newErrors.push(`${trade?.name}: Minimum job fee is required`);
+      }
 
       if (!tradePricing.laborRateType) {
         newErrors.push(`${trade?.name}: Please select a labor rate type`);
       }
 
-      if (tradePricing.laborRateType === 'hourly' && !tradePricing.hourlyRate) {
-        newErrors.push(`${trade?.name}: Please enter hourly rate`);
+      if (trade?.type === 'remodel') {
+        if (!tradePricing.laborLow || !tradePricing.laborHigh) {
+          newErrors.push(`${trade?.name}: Labor estimate range is required`);
+        }
+        if (!tradePricing.roughMaterialsLow || !tradePricing.roughMaterialsHigh) {
+          newErrors.push(`${trade?.name}: Rough materials range is required`);
+        }
+        if (!tradePricing.finishMaterials) {
+          newErrors.push(`${trade?.name}: Please select finish materials option`);
+        }
+        if (tradePricing.finishMaterials === 'included' && (!tradePricing.finishMaterialsAllowanceLow || !tradePricing.finishMaterialsAllowanceHigh)) {
+          newErrors.push(`${trade?.name}: Finish materials allowance range is required`);
+        }
       }
 
-      if (tradePricing.laborRateType === 'per_sqft' && !tradePricing.sqftRate) {
-        newErrors.push(`${trade?.name}: Please enter per sq ft rate`);
+      if (trade?.type === 'painting') {
+        if (!tradePricing.sqftRate) {
+          newErrors.push(`${trade?.name}: Per sq ft rate is required`);
+        }
+        if (!tradePricing.roughMaterialsLow || !tradePricing.roughMaterialsHigh) {
+          newErrors.push(`${trade?.name}: Materials range is required`);
+        }
       }
 
-      if (trade?.requiresPermit && tradePricing.permitCostIncluded && !tradePricing.estimatedPermitCost) {
-        newErrors.push(`${trade?.name}: Please enter estimated permit cost`);
+      if (trade?.type === 'trade') {
+        if (!tradePricing.laborLow || !tradePricing.laborHigh) {
+          newErrors.push(`${trade?.name}: Labor range is required`);
+        }
+        if (!tradePricing.roughMaterialsLow || !tradePricing.roughMaterialsHigh) {
+          newErrors.push(`${trade?.name}: Materials range is required`);
+        }
+      }
+
+      if (!tradePricing.permitRequired) {
+        newErrors.push(`${trade?.name}: Please specify if permit is required`);
+      }
+
+      if (tradePricing.permitRequired === 'yes' && (!tradePricing.permitCostLow || !tradePricing.permitCostHigh)) {
+        newErrors.push(`${trade?.name}: Permit cost range is required when permit is required`);
       }
     });
 
@@ -91,241 +177,369 @@ export function TradeAndPricing() {
 
     if (newErrors.length === 0) {
       alert('Trade and pricing saved successfully!');
-      console.log('Saved data:', { selectedTrades, pricing });
+      console.log('Saved data:', { selectedTrades, pricing, serviceZipCodes: validZips });
     }
   };
 
   return (
     <div className="bg-white rounded-xl p-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Trade Categories & Pricing</h1>
-        <p className="text-slate-600">Select your trade specialties and set pricing structure</p>
+        <h1 className="text-3xl font-bold text-slate-900 mb-2">Trades & Pricing</h1>
+        <p className="text-slate-500">Select your trade categories and configure pricing</p>
       </div>
 
       {/* Errors */}
       {errors.length > 0 && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <div className="flex items-start gap-2 mb-2">
-            <AlertCircle className="size-5 text-red-600 flex-shrink-0" />
-            <p className="font-semibold text-red-900">Please fix the following errors:</p>
+          <div className="flex items-start gap-2">
+            <AlertCircle className="size-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold text-red-900 mb-2">Please fix the following errors:</p>
+              <ul className="list-disc list-inside space-y-1">
+                {errors.map((error, i) => (
+                  <li key={i} className="text-sm text-red-700">{error}</li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <ul className="list-disc list-inside space-y-1 ml-7">
-            {errors.map((error, index) => (
-              <li key={index} className="text-sm text-red-700">{error}</li>
-            ))}
-          </ul>
         </div>
       )}
 
-      {/* Trade Selection */}
+      {/* Service ZIP Codes */}
+      <div className="mb-8 p-6 bg-slate-50 border-2 border-slate-200 rounded-xl">
+        <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
+          <DollarSign className="size-5 text-[#f9a825]" />
+          Service ZIP Codes *
+        </h3>
+        <p className="text-sm text-slate-600 mb-4">
+          Add all ZIP codes you serve. Jobs from these areas will be sent to you automatically.
+        </p>
+        <div className="space-y-3">
+          {serviceZipCodes.map((zip, index) => (
+            <div key={index} className="flex gap-3">
+              <input
+                type="text"
+                value={zip}
+                onChange={(e) => updateZipCode(index, e.target.value)}
+                placeholder="12345"
+                maxLength={5}
+                className="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#f9a825] focus:border-transparent"
+              />
+              {serviceZipCodes.length > 1 && (
+                <button
+                  onClick={() => removeZipCode(index)}
+                  className="px-4 py-3 border-2 border-red-300 text-red-700 rounded-lg font-semibold hover:bg-red-50"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+          ))}
+          <button
+            onClick={addZipCode}
+            className="px-4 py-2 bg-[#f9a825] text-white rounded-lg font-semibold hover:bg-[#e69b20]"
+          >
+            + Add ZIP Code
+          </button>
+        </div>
+      </div>
+
+      {/* Trade Categories */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold text-slate-900 mb-4">
-          Select Your Trade Categories * (At least 1 required)
-        </h2>
-        <div className="grid md:grid-cols-2 gap-3">
+        <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
+          <Wrench className="size-5 text-[#f9a825]" />
+          Select Trade Categories *
+        </h3>
+        <div className="grid md:grid-cols-3 gap-4">
           {tradeCategories.map(trade => (
             <label
               key={trade.id}
-              className={`flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
+              className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
                 selectedTrades.includes(trade.id)
                   ? 'border-[#f9a825] bg-[#f9a825]/5'
-                  : 'border-slate-300 hover:border-slate-400'
+                  : 'border-slate-200 hover:border-slate-300'
               }`}
             >
-              <input
-                type="checkbox"
-                checked={selectedTrades.includes(trade.id)}
-                onChange={() => handleTradeToggle(trade.id)}
-                className="size-5 text-[#f9a825] rounded focus:ring-[#f9a825]"
-              />
-              <div className="flex-1">
-                <p className="font-semibold text-slate-900">{trade.name}</p>
-                {trade.requiresPermit && (
-                  <p className="text-xs text-slate-500">Typically requires permits</p>
-                )}
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  checked={selectedTrades.includes(trade.id)}
+                  onChange={() => handleTradeToggle(trade.id)}
+                  className="size-5 text-[#f9a825] focus:ring-[#f9a825] rounded"
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-slate-900">{trade.name}</p>
+                  {trade.requiresPermit && (
+                    <p className="text-xs text-amber-600">Permit typically required</p>
+                  )}
+                </div>
               </div>
-              {selectedTrades.includes(trade.id) && (
-                <CheckCircle className="size-5 text-[#f9a825]" />
-              )}
             </label>
           ))}
         </div>
       </div>
 
-      {/* Pricing Configuration */}
-      {selectedTrades.length > 0 && (
-        <div className="space-y-6">
-          <h2 className="text-xl font-semibold text-slate-900">Pricing Structure</h2>
+      {/* Pricing for Each Trade */}
+      {selectedTrades.map(tradeId => {
+        const trade = tradeCategories.find(t => t.id === tradeId);
+        const tradePricing = pricing[tradeId];
 
-          {selectedTrades.map(tradeId => {
-            const trade = tradeCategories.find(t => t.id === tradeId);
-            const tradePricing = pricing[tradeId] || { laborRateType: '' };
+        return (
+          <div key={tradeId} className="mb-8 p-6 border-2 border-[#f9a825] rounded-xl bg-gradient-to-b from-[#f9a825]/5 to-white">
+            <h3 className="text-xl font-bold text-slate-900 mb-6">{trade?.name} - Pricing Structure</h3>
 
-            return (
-              <div key={tradeId} className="p-6 border-2 border-slate-200 rounded-xl">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="size-10 bg-[#f9a825]/10 rounded-lg flex items-center justify-center">
-                    <Wrench className="size-5 text-[#f9a825]" />
+            <div className="space-y-6">
+              {/* Minimum Job Fee */}
+              <div>
+                <label className="block text-sm font-bold text-slate-900 mb-2">
+                  Minimum Job Fee ($) *
+                </label>
+                <input
+                  type="number"
+                  value={tradePricing.minimumJobFee}
+                  onChange={(e) => updatePricing(tradeId, 'minimumJobFee', e.target.value)}
+                  placeholder="500"
+                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#f9a825] focus:border-transparent"
+                />
+              </div>
+
+              {/* Labor Rate Type */}
+              <div>
+                <label className="block text-sm font-bold text-slate-900 mb-2">
+                  Labor Rate Type *
+                </label>
+                <select
+                  value={tradePricing.laborRateType}
+                  onChange={(e) => updatePricing(tradeId, 'laborRateType', e.target.value)}
+                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#f9a825] focus:border-transparent"
+                >
+                  <option value="">Select rate type</option>
+                  <option value="flat">Flat Fee</option>
+                  <option value="per_sqft">Per Square Foot</option>
+                  <option value="per_linear_ft">Per Linear Foot</option>
+                  <option value="per_fixture">Per Fixture</option>
+                  <option value="per_hour">Per Hour</option>
+                </select>
+              </div>
+
+              {/* Labor Estimate Range (Remodel & Trade types) */}
+              {(trade?.type === 'remodel' || trade?.type === 'trade') && (
+                <div className="p-4 bg-slate-50 rounded-lg">
+                  <h4 className="font-bold text-slate-900 mb-3">Labor Estimate Range *</h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-slate-700 mb-2">
+                        Low Estimate ($)
+                      </label>
+                      <input
+                        type="number"
+                        value={tradePricing.laborLow}
+                        onChange={(e) => updatePricing(tradeId, 'laborLow', e.target.value)}
+                        placeholder="5000"
+                        className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#f9a825] focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-slate-700 mb-2">
+                        High Estimate ($)
+                      </label>
+                      <input
+                        type="number"
+                        value={tradePricing.laborHigh}
+                        onChange={(e) => updatePricing(tradeId, 'laborHigh', e.target.value)}
+                        placeholder="7000"
+                        className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#f9a825] focus:border-transparent"
+                      />
+                    </div>
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900">{trade?.name}</h3>
                 </div>
+              )}
 
-                {/* Labor Rate Type */}
-                <div className="mb-4">
-                  <label className="block text-sm font-semibold text-slate-900 mb-2">
-                    Labor Rate Type *
+              {/* Per Sq Ft Rate (Painting type) */}
+              {trade?.type === 'painting' && (
+                <div>
+                  <label className="block text-sm font-bold text-slate-900 mb-2">
+                    Labor Rate ($/sq ft) *
                   </label>
-                  <div className="grid md:grid-cols-3 gap-3">
-                    <label className={`flex items-center justify-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition-all ${
-                      tradePricing.laborRateType === 'hourly'
-                        ? 'border-[#f9a825] bg-[#f9a825]/5'
-                        : 'border-slate-300 hover:border-slate-400'
-                    }`}>
-                      <input
-                        type="radio"
-                        name={`rate-${tradeId}`}
-                        value="hourly"
-                        checked={tradePricing.laborRateType === 'hourly'}
-                        onChange={(e) => updatePricing(tradeId, { laborRateType: e.target.value as any })}
-                        className="text-[#f9a825] focus:ring-[#f9a825]"
-                      />
-                      <span className="font-medium">Hourly Rate</span>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={tradePricing.sqftRate || ''}
+                    onChange={(e) => updatePricing(tradeId, 'sqftRate', e.target.value)}
+                    placeholder="2.50"
+                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#f9a825] focus:border-transparent"
+                  />
+                </div>
+              )}
+
+              {/* Rough Materials Range */}
+              <div className="p-4 bg-slate-50 rounded-lg">
+                <h4 className="font-bold text-slate-900 mb-3">
+                  {trade?.type === 'painting' ? 'Materials Range *' : 'Rough Materials Range *'}
+                </h4>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      Low Estimate ($)
                     </label>
-                    <label className={`flex items-center justify-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition-all ${
-                      tradePricing.laborRateType === 'per_sqft'
-                        ? 'border-[#f9a825] bg-[#f9a825]/5'
-                        : 'border-slate-300 hover:border-slate-400'
-                    }`}>
-                      <input
-                        type="radio"
-                        name={`rate-${tradeId}`}
-                        value="per_sqft"
-                        checked={tradePricing.laborRateType === 'per_sqft'}
-                        onChange={(e) => updatePricing(tradeId, { laborRateType: e.target.value as any })}
-                        className="text-[#f9a825] focus:ring-[#f9a825]"
-                      />
-                      <span className="font-medium">Per Sq Ft</span>
+                    <input
+                      type="number"
+                      value={tradePricing.roughMaterialsLow}
+                      onChange={(e) => updatePricing(tradeId, 'roughMaterialsLow', e.target.value)}
+                      placeholder="2000"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#f9a825] focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      High Estimate ($)
                     </label>
-                    <label className={`flex items-center justify-center gap-2 p-3 border-2 rounded-lg cursor-pointer transition-all ${
-                      tradePricing.laborRateType === 'fixed'
-                        ? 'border-[#f9a825] bg-[#f9a825]/5'
-                        : 'border-slate-300 hover:border-slate-400'
-                    }`}>
-                      <input
-                        type="radio"
-                        name={`rate-${tradeId}`}
-                        value="fixed"
-                        checked={tradePricing.laborRateType === 'fixed'}
-                        onChange={(e) => updatePricing(tradeId, { laborRateType: e.target.value as any })}
-                        className="text-[#f9a825] focus:ring-[#f9a825]"
-                      />
-                      <span className="font-medium">Fixed Price</span>
-                    </label>
+                    <input
+                      type="number"
+                      value={tradePricing.roughMaterialsHigh}
+                      onChange={(e) => updatePricing(tradeId, 'roughMaterialsHigh', e.target.value)}
+                      placeholder="3000"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#f9a825] focus:border-transparent"
+                    />
                   </div>
                 </div>
+              </div>
 
-                {/* Conditional Rate Input */}
-                {tradePricing.laborRateType === 'hourly' && (
-                  <div className="mb-4">
-                    <label className="block text-sm font-semibold text-slate-900 mb-2">
-                      Hourly Rate *
-                    </label>
-                    <div className="relative">
-                      <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 size-5 text-slate-400" />
-                      <input
-                        type="number"
-                        placeholder="e.g., 75"
-                        value={tradePricing.hourlyRate || ''}
-                        onChange={(e) => updatePricing(tradeId, { hourlyRate: Number(e.target.value) })}
-                        className="w-full pl-10 pr-4 py-3 border-2 border-slate-300 rounded-lg focus:ring-2 focus:ring-[#f9a825] focus:border-transparent"
-                      />
+              {/* Finish Materials (Remodel & Painting types) */}
+              {(trade?.type === 'remodel' || trade?.type === 'painting') && (
+                <div className="p-4 bg-slate-50 rounded-lg">
+                  <h4 className="font-bold text-slate-900 mb-3">Finish Materials *</h4>
+                  <div className="space-y-4">
+                    <div className="flex gap-4">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name={`finish-${tradeId}`}
+                          value="included"
+                          checked={tradePricing.finishMaterials === 'included'}
+                          onChange={(e) => updatePricing(tradeId, 'finishMaterials', e.target.value as any)}
+                          className="size-4 text-[#f9a825] focus:ring-[#f9a825]"
+                        />
+                        <span className="text-slate-700 font-medium">Included (Allowance)</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name={`finish-${tradeId}`}
+                          value="owner_supplied"
+                          checked={tradePricing.finishMaterials === 'owner_supplied'}
+                          onChange={(e) => updatePricing(tradeId, 'finishMaterials', e.target.value as any)}
+                          className="size-4 text-[#f9a825] focus:ring-[#f9a825]"
+                        />
+                        <span className="text-slate-700 font-medium">Owner Supplied</span>
+                      </label>
                     </div>
-                  </div>
-                )}
 
-                {tradePricing.laborRateType === 'per_sqft' && (
-                  <div className="mb-4">
-                    <label className="block text-sm font-semibold text-slate-900 mb-2">
-                      Rate Per Square Foot *
-                    </label>
-                    <div className="relative">
-                      <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 size-5 text-slate-400" />
-                      <input
-                        type="number"
-                        placeholder="e.g., 15"
-                        value={tradePricing.sqftRate || ''}
-                        onChange={(e) => updatePricing(tradeId, { sqftRate: Number(e.target.value) })}
-                        className="w-full pl-10 pr-4 py-3 border-2 border-slate-300 rounded-lg focus:ring-2 focus:ring-[#f9a825] focus:border-transparent"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Permit Cost (Conditional) */}
-                {trade?.requiresPermit && (
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <label className="flex items-start gap-2 cursor-pointer mb-3">
-                      <input
-                        type="checkbox"
-                        checked={tradePricing.permitCostIncluded || false}
-                        onChange={(e) => updatePricing(tradeId, { permitCostIncluded: e.target.checked })}
-                        className="mt-1 size-4 text-[#f9a825] rounded focus:ring-[#f9a825]"
-                      />
-                      <div>
-                        <p className="font-semibold text-blue-900">Include permit costs in quotes</p>
-                        <p className="text-sm text-blue-700">Typically required for {trade.name}</p>
-                      </div>
-                    </label>
-
-                    {tradePricing.permitCostIncluded && (
-                      <div>
-                        <label className="block text-sm font-semibold text-blue-900 mb-2">
-                          Estimated Permit Cost Range *
-                        </label>
-                        <div className="relative">
-                          <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 size-5 text-blue-600" />
+                    {tradePricing.finishMaterials === 'included' && (
+                      <div className="grid md:grid-cols-2 gap-4 pt-4 border-t border-slate-300">
+                        <div>
+                          <label className="block text-sm font-semibold text-slate-700 mb-2">
+                            Allowance Low ($)
+                          </label>
                           <input
                             type="number"
-                            placeholder="e.g., 500"
-                            value={tradePricing.estimatedPermitCost || ''}
-                            onChange={(e) => updatePricing(tradeId, { estimatedPermitCost: Number(e.target.value) })}
-                            className="w-full pl-10 pr-4 py-3 border-2 border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                            value={tradePricing.finishMaterialsAllowanceLow}
+                            onChange={(e) => updatePricing(tradeId, 'finishMaterialsAllowanceLow', e.target.value)}
+                            placeholder="3000"
+                            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#f9a825] focus:border-transparent"
                           />
                         </div>
-                        <p className="text-xs text-blue-700 mt-1">Average permit cost for this type of work</p>
+                        <div>
+                          <label className="block text-sm font-semibold text-slate-700 mb-2">
+                            Allowance High ($)
+                          </label>
+                          <input
+                            type="number"
+                            value={tradePricing.finishMaterialsAllowanceHigh}
+                            onChange={(e) => updatePricing(tradeId, 'finishMaterialsAllowanceHigh', e.target.value)}
+                            placeholder="5000"
+                            className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#f9a825] focus:border-transparent"
+                          />
+                        </div>
                       </div>
                     )}
                   </div>
-                )}
+                </div>
+              )}
+
+              {/* Permit Required */}
+              <div className="p-4 bg-slate-50 rounded-lg">
+                <h4 className="font-bold text-slate-900 mb-3">Permit Typically Required? *</h4>
+                <div className="space-y-4">
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name={`permit-${tradeId}`}
+                        value="yes"
+                        checked={tradePricing.permitRequired === 'yes'}
+                        onChange={(e) => updatePricing(tradeId, 'permitRequired', e.target.value as any)}
+                        className="size-4 text-[#f9a825] focus:ring-[#f9a825]"
+                      />
+                      <span className="text-slate-700 font-medium">Yes</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name={`permit-${tradeId}`}
+                        value="no"
+                        checked={tradePricing.permitRequired === 'no'}
+                        onChange={(e) => updatePricing(tradeId, 'permitRequired', e.target.value as any)}
+                        className="size-4 text-[#f9a825] focus:ring-[#f9a825]"
+                      />
+                      <span className="text-slate-700 font-medium">No</span>
+                    </label>
+                  </div>
+
+                  {tradePricing.permitRequired === 'yes' && (
+                    <div className="grid md:grid-cols-2 gap-4 pt-4 border-t border-slate-300">
+                      <div>
+                        <label className="block text-sm font-semibold text-slate-700 mb-2">
+                          Permit Cost Low ($)
+                        </label>
+                        <input
+                          type="number"
+                          value={tradePricing.permitCostLow}
+                          onChange={(e) => updatePricing(tradeId, 'permitCostLow', e.target.value)}
+                          placeholder="500"
+                          className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#f9a825] focus:border-transparent"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-slate-700 mb-2">
+                          Permit Cost High ($)
+                        </label>
+                        <input
+                          type="number"
+                          value={tradePricing.permitCostHigh}
+                          onChange={(e) => updatePricing(tradeId, 'permitCostHigh', e.target.value)}
+                          placeholder="800"
+                          className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#f9a825] focus:border-transparent"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-            );
-          })}
-        </div>
-      )}
+            </div>
+          </div>
+        );
+      })}
 
       {/* Submit Button */}
-      {selectedTrades.length > 0 && (
-        <div className="mt-8 flex gap-4">
-          <button
-            onClick={validateAndSubmit}
-            className="flex-1 bg-[#f9a825] text-white py-4 rounded-lg font-semibold text-lg hover:bg-[#f9a825]/90 transition-all shadow-lg"
-          >
-            Save Trade & Pricing Configuration
-          </button>
-          <button
-            className="px-8 py-4 border-2 border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition-all"
-          >
-            Cancel
-          </button>
-        </div>
-      )}
-
-      {/* Info Box */}
-      <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-        <p className="text-sm text-amber-900">
-          <strong>Note:</strong> Your pricing structure helps homeowners understand your rates. 
-          You can always provide custom quotes based on specific project requirements.
-        </p>
+      <div className="flex gap-4">
+        <button
+          onClick={validateAndSubmit}
+          className="flex-1 bg-[#f9a825] text-white py-3 rounded-lg font-bold hover:bg-[#e69b20] transition-all flex items-center justify-center gap-2"
+        >
+          <CheckCircle className="size-5" />
+          Save Trade & Pricing
+        </button>
       </div>
     </div>
   );

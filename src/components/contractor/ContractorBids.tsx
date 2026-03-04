@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { DollarSign, Calendar, MapPin, Clock } from 'lucide-react';
+import { ProjectTimer } from '../projects/ProjectTimer';
 
 interface Bid {
   id: string;
@@ -8,7 +9,7 @@ interface Bid {
   budget: { min: number; max: number };
   deadline: string;
   location: string;
-  daysRemaining: number;
+  postedAt: Date; // CHANGED: Use actual timestamp instead of daysRemaining
   image: string;
   bidAmount: number;
   submittedDate: string;
@@ -26,7 +27,7 @@ const mockBids: Bid[] = [
     budget: { min: 35000, max: 45000 },
     deadline: '13 March 2026',
     location: 'Austin, TX',
-    daysRemaining: 18,
+    postedAt: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago (18h remaining)
     image: 'https://images.unsplash.com/photo-1762811003338-aef30274513b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBraXRjaGVuJTIwcmVub3ZhdGlvbiUyMGludGVyaW9yJTIwd2hpdGUlMjBjYWJpbmV0c3xlbnwxfHx8fDE3NzE0NjkzNTF8MA&ixlib=rb-4.1.0&q=80&w=400',
     bidAmount: 38000,
     submittedDate: 'Feb 10, 2026'
@@ -38,7 +39,7 @@ const mockBids: Bid[] = [
     budget: { min: 35000, max: 45000 },
     deadline: '13 March 2026',
     location: 'Austin, TX',
-    daysRemaining: 15,
+    postedAt: new Date(Date.now() - 9 * 60 * 60 * 1000), // 9 hours ago (15h remaining)
     image: 'https://images.unsplash.com/photo-1762811003338-aef30274513b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBraXRjaGVuJTIwcmVub3ZhdGlvbiUyMGludGVyaW9yJTIwd2hpdGUlMjBjYWJpbmV0c3xlbnwxfHx8fDE3NzE0NjkzNTF8MA&ixlib=rb-4.1.0&q=80&w=400',
     bidAmount: 40000,
     submittedDate: 'Feb 5, 2026'
@@ -50,7 +51,7 @@ const mockBids: Bid[] = [
     budget: { min: 35000, max: 45000 },
     deadline: '13 March 2026',
     location: 'Austin, TX',
-    daysRemaining: 15,
+    postedAt: new Date(Date.now() - 9 * 60 * 60 * 1000), // 9 hours ago (15h remaining)
     image: 'https://images.unsplash.com/photo-1762811003338-aef30274513b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBraXRjaGVuJTIwcmVub3ZhdGlvbiUyMGludGVyaW9yJTIwd2hpdGUlMjBjYWJpbmV0c3xlbnwxfHx8fDE3NzE0NjkzNTF8MA&ixlib=rb-4.1.0&q=80&w=400',
     bidAmount: 42000,
     submittedDate: 'Feb 1, 2026'
@@ -205,7 +206,7 @@ export function ContractorBids({ onViewBid }: ContractorBidsProps) {
                     
                     <div className="flex items-center gap-2 text-sm text-slate-600">
                       <Clock className="size-4 text-[#f9a825]" />
-                      <span>{bid.daysRemaining} Days Remaining</span>
+                      <ProjectTimer deadline={bid.deadline} postedAt={bid.postedAt} />
                     </div>
                   </div>
                 </div>

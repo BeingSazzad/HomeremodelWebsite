@@ -1,7 +1,7 @@
 
-  # Modernize Home Remodeling Marketplace UI
+  # Home Update
 
-  This is a code bundle for Modernize Home Remodeling Marketplace UI. The original project is available at https://www.figma.com/design/NSpOLPSGFsHtuPs0ZumvVi/Modernize-Home-Remodeling-Marketplace-UI.
+  This is a code bundle for Home Update. The original project is available at https://www.figma.com/design/NSpOLPSGFsHtuPs0ZumvVi/Home-Update.
 
   ## Running the code
 

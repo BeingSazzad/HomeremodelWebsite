@@ -15,7 +15,7 @@ export function DocumentUpload() {
     bond: { type: 'bond', file: null, expirationDate: '' },
   });
 
-  const [workersComp, setWorkersComp] = useState<'yes' | 'no' | ''>('');
+  const [workersComp, setWorkersComp] = useState<'active' | 'exempt' | 'not_applicable' | ''>('');
   const [status, setStatus] = useState<'pending' | 'approved' | 'rejected'>('pending');
 
   const handleFileUpload = (docType: string, file: File) => {
@@ -236,9 +236,9 @@ export function DocumentUpload() {
             <input
               type="radio"
               name="workers-comp"
-              value="yes"
-              checked={workersComp === 'yes'}
-              onChange={(e) => setWorkersComp(e.target.value as 'yes')}
+              value="active"
+              checked={workersComp === 'active'}
+              onChange={(e) => setWorkersComp(e.target.value as 'active')}
               className="size-4 text-[#f9a825] focus:ring-[#f9a825]"
             />
             <span className="text-slate-700">I have workers compensation insurance</span>
@@ -247,12 +247,23 @@ export function DocumentUpload() {
             <input
               type="radio"
               name="workers-comp"
-              value="no"
-              checked={workersComp === 'no'}
-              onChange={(e) => setWorkersComp(e.target.value as 'no')}
+              value="exempt"
+              checked={workersComp === 'exempt'}
+              onChange={(e) => setWorkersComp(e.target.value as 'exempt')}
               className="size-4 text-[#f9a825] focus:ring-[#f9a825]"
             />
             <span className="text-slate-700">I am exempt / sole proprietor</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="workers-comp"
+              value="not_applicable"
+              checked={workersComp === 'not_applicable'}
+              onChange={(e) => setWorkersComp(e.target.value as 'not_applicable')}
+              className="size-4 text-[#f9a825] focus:ring-[#f9a825]"
+            />
+            <span className="text-slate-700">Not applicable</span>
           </label>
         </div>
       </div>

@@ -15,16 +15,69 @@ import {
   Zap
 } from 'lucide-react';
 import { Button } from '../ui/button';
+import { HomeownerProfileView } from './HomeownerProfileView';
 
 interface ContractorDashboardHomeProps {
   onNavigate: (page: string) => void;
-  currentPlan?: 'free' | 'starter' | 'pro';
+  currentPlan?: 'none' | 'active';
+  currentBilling?: 'monthly' | 'yearly';
 }
 
-export function ContractorDashboardHome({ onNavigate, currentPlan = 'free' }: ContractorDashboardHomeProps) {
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  change?: {
+    value: number;
+    type: 'increase' | 'decrease';
+  };
+  icon: React.ReactNode;
+  bgColor: string;
+  iconColor: string;
+}
+
+function StatCard({ title, value, change, icon, bgColor, iconColor }: StatCardProps) {
+  return (
+    <div className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-lg transition-all">
+      <div className="flex items-start justify-between mb-4">
+        <div className={`size-12 ${bgColor} rounded-lg flex items-center justify-center`}>
+          <div className={iconColor}>
+            {icon}
+          </div>
+        </div>
+        {change && (
+          <div className={`flex items-center gap-1 text-sm font-medium ${
+            change.type === 'increase' ? 'text-green-600' : 'text-red-600'
+          }`}>
+            {change.type === 'increase' ? (
+              <ArrowUpRight className="size-4" />
+            ) : (
+              <ArrowDownRight className="size-4" />
+            )}
+            <span>{change.value}%</span>
+          </div>
+        )}
+      </div>
+      <h3 className="text-2xl font-bold text-slate-900 mb-1">{value}</h3>
+      <p className="text-sm text-slate-500">{title}</p>
+    </div>
+  );
+}
+
+export function ContractorDashboardHome({ onNavigate, currentPlan = 'none', currentBilling = 'monthly' }: ContractorDashboardHomeProps) {
   const [selectedYear, setSelectedYear] = useState<number>(2026);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyText, setReplyText] = useState('');
+  const [viewingHomeownerId, setViewingHomeownerId] = useState<string | null>(null);
+
+  // If viewing a homeowner profile, show that view
+  if (viewingHomeownerId) {
+    return (
+      <HomeownerProfileView
+        homeownerId={viewingHomeownerId}
+        onBack={() => setViewingHomeownerId(null)}
+      />
+    );
+  }
 
   // Mock earnings data by year
   const earningsDataByYear: Record<number, number[]> = {
@@ -77,7 +130,7 @@ export function ContractorDashboardHome({ onNavigate, currentPlan = 'free' }: Co
       </div>
 
       {/* Subscription Banner */}
-      {currentPlan === 'free' && (
+      {currentPlan === 'none' && (
         <div className="bg-gradient-to-r from-[#f9a825] to-[#e69b20] rounded-xl p-6 mb-8 text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -100,30 +153,7 @@ export function ContractorDashboardHome({ onNavigate, currentPlan = 'free' }: Co
         </div>
       )}
 
-      {currentPlan === 'starter' && (
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-6 mb-8 text-white">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="size-16 bg-white/20 rounded-full flex items-center justify-center">
-                <Zap className="size-8 text-white" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-1">Starter Plan Active</h3>
-                <p className="text-white/90">Upgrade to Pro for priority routing and verified badge!</p>
-              </div>
-            </div>
-            <Button
-              onClick={() => onNavigate('subscription')}
-              className="bg-white text-blue-600 hover:bg-white/90 font-semibold px-6"
-            >
-              <Crown className="size-4 mr-2" />
-              Upgrade to Pro
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {currentPlan === 'pro' && (
+      {currentPlan === 'active' && (
         <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-6 mb-8 text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -350,18 +380,25 @@ export function ContractorDashboardHome({ onNavigate, currentPlan = 'free' }: Co
           <h2 className="text-lg font-bold text-slate-900 mb-5">Quick Actions</h2>
           <div className="space-y-3">
             <Button
-              onClick={() => onNavigate('my-bids')}
+              onClick={() => onNavigate('job-feed')}
               className="w-full bg-[#f9a825] hover:bg-[#e69b20] text-white justify-start"
             >
-              <Briefcase className="size-4 mr-2" />
-              View My Bids
+              <Zap className="size-4 mr-2" />
+              View Job Feed (Auto-Routing)
             </Button>
             <Button
-              onClick={() => onNavigate('my-projects')}
+              onClick={() => onNavigate('my-bids')}
               className="w-full bg-[#f9a825] hover:bg-[#e39922] text-white justify-start"
             >
               <Briefcase className="size-4 mr-2" />
-              Manage Projects
+              My Submitted Quotes
+            </Button>
+            <Button
+              onClick={() => onNavigate('my-projects')}
+              className="w-full bg-slate-700 hover:bg-slate-800 text-white justify-start"
+            >
+              <CheckCircle className="size-4 mr-2" />
+              Active Projects
             </Button>
             <Button
               onClick={() => onNavigate('projects')}
@@ -369,15 +406,15 @@ export function ContractorDashboardHome({ onNavigate, currentPlan = 'free' }: Co
               className="w-full justify-start border-slate-200"
             >
               <Star className="size-4 mr-2" />
-              Browse Projects
+              Browse All Projects
             </Button>
             <Button
-              onClick={() => onNavigate('profile')}
+              onClick={() => onNavigate('messages')}
               variant="outline"
               className="w-full justify-start border-slate-200"
             >
-              <Calendar className="size-4 mr-2" />
-              Edit Profile
+              <MessageSquare className="size-4 mr-2" />
+              Messages
             </Button>
           </div>
 
@@ -434,15 +471,25 @@ export function ContractorDashboardHome({ onNavigate, currentPlan = 'free' }: Co
               className="border border-slate-200 rounded-lg p-5 hover:shadow-md transition-shadow"
             >
               <div className="flex items-start gap-4 mb-3">
-                <img
-                  src={review.homeownerAvatar}
-                  alt={review.homeownerName}
-                  className="size-12 rounded-full object-cover flex-shrink-0"
-                />
+                <button
+                  onClick={() => setViewingHomeownerId(review.id)}
+                  className="flex-shrink-0 hover:opacity-80 transition-opacity"
+                >
+                  <img
+                    src={review.homeownerAvatar}
+                    alt={review.homeownerName}
+                    className="size-12 rounded-full object-cover ring-2 ring-transparent hover:ring-[#f9a825] transition-all cursor-pointer"
+                  />
+                </button>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-2">
                     <div>
-                      <h3 className="font-semibold text-slate-900">{review.homeownerName}</h3>
+                      <button
+                        onClick={() => setViewingHomeownerId(review.id)}
+                        className="font-semibold text-slate-900 hover:text-[#f9a825] transition-colors text-left"
+                      >
+                        {review.homeownerName}
+                      </button>
                       <p className="text-xs text-slate-500">{review.date}</p>
                     </div>
                     {renderStars(review.rating)}
@@ -503,3 +550,43 @@ export function ContractorDashboardHome({ onNavigate, currentPlan = 'free' }: Co
     </div>
   );
 }
+
+interface RecentReview {
+  id: string;
+  homeownerName: string;
+  homeownerAvatar: string;
+  rating: number;
+  date: string;
+  reviewText: string;
+  replied: boolean;
+}
+
+const mockRecentReviews: RecentReview[] = [
+  {
+    id: '1',
+    homeownerName: 'Sarah Martinez',
+    homeownerAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
+    rating: 5,
+    date: '2 days ago',
+    reviewText: 'Exceptional work on our kitchen renovation! Highly professional and delivered on time.',
+    replied: false
+  },
+  {
+    id: '2',
+    homeownerName: 'Michael Chen',
+    homeownerAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
+    rating: 5,
+    date: '5 days ago',
+    reviewText: 'Outstanding bathroom remodel! The attention to detail was incredible.',
+    replied: true
+  },
+  {
+    id: '3',
+    homeownerName: 'Emily Rodriguez',
+    homeownerAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
+    rating: 4,
+    date: '1 week ago',
+    reviewText: 'Great work overall. Very satisfied with the results!',
+    replied: false
+  }
+];

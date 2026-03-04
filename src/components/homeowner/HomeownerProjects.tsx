@@ -186,51 +186,55 @@ export function HomeownerProjects({ onViewProject }: { onViewProject: (id: numbe
               </div>
 
               {/* Content */}
-              <div className="flex-1 p-4">
-                <div className="flex items-start justify-between mb-2">
-                  <div className="flex-1">
-                    <h3 className="font-bold text-slate-900 mb-1">{project.title}</h3>
-                    <p className="text-slate-600 text-sm line-clamp-1">{project.description}</p>
-                  </div>
+              <div className="flex-1 p-3">
+                {/* Title and description */}
+                <div className="mb-2">
+                  <h3 className="font-bold text-slate-900 mb-0.5 leading-tight">{project.title}</h3>
+                  <p className="text-slate-600 text-xs line-clamp-1 leading-relaxed">{project.description}</p>
                 </div>
 
-                <div className="flex items-center gap-4 mb-3 text-sm">
-                  <div className="flex items-center gap-1">
-                    <DollarSign className="size-4 text-[#f9a825]" />
-                    <span className="font-semibold text-slate-900">{project.budget}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-1">
-                    <FileText className="size-4 text-blue-500" />
-                    <span className="font-semibold text-slate-900">{project.bidsReceived}</span>
-                  </div>
-
-                  {project.contractor && (
-                    <div className="flex items-center gap-1">
-                      <span className="text-slate-600">→</span>
-                      <span className="font-semibold text-slate-900">{project.contractor}</span>
+                {/* Metadata and Actions in one row */}
+                <div className="flex items-center justify-between gap-3">
+                  {/* Left: Metadata badges */}
+                  <div className="flex items-center gap-1.5 text-xs flex-wrap">
+                    <div className="flex items-center gap-0.5 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100">
+                      <DollarSign className="size-3 text-[#f9a825]" />
+                      <span className="font-semibold text-slate-900">{project.budget}</span>
                     </div>
-                  )}
-                </div>
+                    
+                    <div className="flex items-center gap-0.5 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100">
+                      <FileText className="size-3 text-blue-500" />
+                      <span className="font-semibold text-slate-900">{project.bidsReceived}</span>
+                    </div>
 
-                {/* Actions */}
-                <div className="flex gap-2">
-                  <Button 
-                    className="bg-slate-900 hover:bg-slate-800 text-white flex-1"
-                    size="sm"
-                    onClick={() => onViewProject(project.id)}
-                  >
-                    <Eye className="size-4 mr-1" />
-                    View
-                  </Button>
-                  {project.status === 'Bidding' && project.bidsReceived > 0 && (
+                    {project.contractor && (
+                      <div className="flex items-center gap-0.5 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200">
+                        <span className="text-slate-600">→</span>
+                        <span className="font-semibold text-slate-900">{project.contractor}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right: Action buttons */}
+                  <div className="flex gap-1.5 flex-shrink-0">
                     <Button 
-                      className="bg-[#f9a825] hover:bg-[#e69b20] text-white flex-1"
+                      className="bg-slate-900 hover:bg-slate-800 text-white h-7 text-xs px-2.5"
                       size="sm"
+                      onClick={() => onViewProject(project.id)}
                     >
-                      Review Bids
+                      <Eye className="size-3 mr-1" />
+                      View
                     </Button>
-                  )}
+                    {project.status === 'Bidding' && project.bidsReceived > 0 && (
+                      <Button 
+                        className="bg-[#f9a825] hover:bg-[#e69b20] text-white h-7 text-xs px-2.5"
+                        size="sm"
+                      >
+                        <FileText className="size-3 mr-1" />
+                        Bids
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

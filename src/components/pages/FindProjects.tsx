@@ -3,6 +3,8 @@ import { Search, MapPin, DollarSign, Clock, SlidersHorizontal, ChevronDown, X } 
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { ProjectCard } from '../shared/ProjectCard';
+import { ProjectTimer } from '../projects/ProjectTimer';
+import { QuoteSlotsProgress } from '../projects/QuoteSlotsProgress';
 
 // Using verified Unsplash images for projects
 const img1 = "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=400&h=300&q=80";
@@ -11,27 +13,172 @@ const img3 = "https://images.unsplash.com/photo-1556912167-f556f1f39faa?auto=for
 const img4 = "https://images.unsplash.com/photo-1556912173-46c336c7fd55?auto=format&fit=crop&w=400&h=300&q=80";
 const img5 = "https://images.unsplash.com/photo-1556909172-54557c7e4fb7?auto=format&fit=crop&w=400&h=300&q=80";
 
-// Generate more dummy data
+// Generate more dummy data with proper timestamps for demo
 const allProjects = [
-    { id: 1, title: "Modern Kitchen Renovation with Custom Cabinets", address: "Austin, TX", budget: "$35,000 - $45,000", timeline: "2-3 months", image: img1, category: "Kitchen", status: "Active" },
-    { id: 2, title: "Living Room Makeover", address: "Dallas, TX", budget: "$25,000 - $35,000", timeline: "1-2 months", image: img2, category: "Living Room", status: "Active" },
-    { id: 3, title: "Luxury Bathroom Design", address: "Houston, TX", budget: "$15,000 - $25,000", timeline: "3-4 months", image: img3, category: "Bathroom", status: "Active" },
-    { id: 4, title: "Backyard Patio Setup", address: "San Antonio, TX", budget: "$8,000 - $15,000", timeline: "1-2 months", image: img4, category: "Outdoor", status: "Active" },
-    { id: 5, title: "Whole Home Paint", address: "Austin, TX", budget: "$5,000 - $10,000", timeline: "2-3 months", image: img5, category: "Paint", status: "Active" },
-    { id: 6, title: "Master Bedroom Update", address: "Fort Worth, TX", budget: "$20,000 - $30,000", timeline: "2-3 months", image: img2, category: "Bedroom", status: "Active" },
-    { id: 7, title: "Kitchen Island Install", address: "Plano, TX", budget: "$12,000 - $18,000", timeline: "1-2 months", image: img1, category: "Kitchen", status: "Active" },
-    { id: 8, title: "Garage Conversion", address: "Arlington, TX", budget: "$30,000 - $40,000", timeline: "3-4 months", image: img4, category: "Renovation", status: "Active" },
-    { id: 9, title: "Modern Kitchen Renovation with Custom Cabinets", address: "Austin, TX", budget: "$35,000 - $45,000", timeline: "2-3 months", image: img1, category: "Kitchen", status: "Active" },
-    { id: 10, title: "Modern Kitchen Renovation with Custom Cabinets", address: "Austin, TX", budget: "$35,000 - $45,000", timeline: "2-3 months", image: img3, category: "Kitchen", status: "Active" },
-    { id: 11, title: "Modern Kitchen Renovation with Custom Cabinets", address: "Austin, TX", budget: "$35,000 - $45,000", timeline: "2-3 months", image: img2, category: "Bathroom", status: "Active" },
-    { id: 12, title: "Modern Kitchen Renovation with Custom Cabinets", address: "Austin, TX", budget: "$35,000 - $45,000", timeline: "2-3 months", image: img5, category: "Kitchen", status: "Active" },
+    { 
+        id: 1, 
+        title: "Modern Kitchen Renovation with Custom Cabinets", 
+        address: "Austin, TX", 
+        budget: "$35,000 - $45,000", 
+        timeline: "2-3 months", 
+        image: img1, 
+        category: "Kitchen", 
+        status: "OPEN",
+        postedAt: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
+        quotesReceived: 2,
+        maxQuotes: 5
+    },
+    { 
+        id: 2, 
+        title: "Living Room Makeover", 
+        address: "Dallas, TX", 
+        budget: "$25,000 - $35,000", 
+        timeline: "1-2 months", 
+        image: img2, 
+        category: "Living Room", 
+        status: "OPEN",
+        postedAt: new Date(Date.now() - 18 * 60 * 60 * 1000), // 18 hours ago
+        quotesReceived: 4,
+        maxQuotes: 5
+    },
+    { 
+        id: 3, 
+        title: "Luxury Bathroom Design", 
+        address: "Houston, TX", 
+        budget: "$15,000 - $25,000", 
+        timeline: "3-4 months", 
+        image: img3, 
+        category: "Bathroom", 
+        status: "OPEN",
+        postedAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+        quotesReceived: 1,
+        maxQuotes: 5
+    },
+    { 
+        id: 4, 
+        title: "Backyard Patio Setup", 
+        address: "San Antonio, TX", 
+        budget: "$8,000 - $15,000", 
+        timeline: "1-2 months", 
+        image: img4, 
+        category: "Outdoor", 
+        status: "OPEN",
+        postedAt: new Date(Date.now() - 22 * 60 * 60 * 1000), // 22 hours ago (closing soon!)
+        quotesReceived: 3,
+        maxQuotes: 5
+    },
+    { 
+        id: 5, 
+        title: "Whole Home Paint", 
+        address: "Austin, TX", 
+        budget: "$5,000 - $10,000", 
+        timeline: "2-3 months", 
+        image: img5, 
+        category: "Paint", 
+        status: "OPEN",
+        postedAt: new Date(Date.now() - 1 * 60 * 60 * 1000), // 1 hour ago
+        quotesReceived: 0,
+        maxQuotes: 5
+    },
+    { 
+        id: 6, 
+        title: "Master Bedroom Update", 
+        address: "Fort Worth, TX", 
+        budget: "$20,000 - $30,000", 
+        timeline: "2-3 months", 
+        image: img2, 
+        category: "Bedroom", 
+        status: "OPEN",
+        postedAt: new Date(Date.now() - 10 * 60 * 60 * 1000), // 10 hours ago
+        quotesReceived: 2,
+        maxQuotes: 5
+    },
+    { 
+        id: 7, 
+        title: "Kitchen Island Install", 
+        address: "Plano, TX", 
+        budget: "$12,000 - $18,000", 
+        timeline: "1-2 months", 
+        image: img1, 
+        category: "Kitchen", 
+        status: "OPEN",
+        postedAt: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
+        quotesReceived: 1,
+        maxQuotes: 5
+    },
+    { 
+        id: 8, 
+        title: "Garage Conversion", 
+        address: "Arlington, TX", 
+        budget: "$30,000 - $40,000", 
+        timeline: "3-4 months", 
+        image: img4, 
+        category: "Renovation", 
+        status: "OPEN",
+        postedAt: new Date(Date.now() - 15 * 60 * 60 * 1000), // 15 hours ago
+        quotesReceived: 3,
+        maxQuotes: 5
+    },
+    { 
+        id: 9, 
+        title: "Modern Kitchen Renovation with Custom Cabinets", 
+        address: "Austin, TX", 
+        budget: "$35,000 - $45,000", 
+        timeline: "2-3 months", 
+        image: img1, 
+        category: "Kitchen", 
+        status: "OPEN",
+        postedAt: new Date(Date.now() - 7 * 60 * 60 * 1000), // 7 hours ago
+        quotesReceived: 2,
+        maxQuotes: 5
+    },
+    { 
+        id: 10, 
+        title: "Modern Kitchen Renovation with Custom Cabinets", 
+        address: "Austin, TX", 
+        budget: "$35,000 - $45,000", 
+        timeline: "2-3 months", 
+        image: img3, 
+        category: "Kitchen", 
+        status: "OPEN",
+        postedAt: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
+        quotesReceived: 1,
+        maxQuotes: 5
+    },
+    { 
+        id: 11, 
+        title: "Modern Kitchen Renovation with Custom Cabinets", 
+        address: "Austin, TX", 
+        budget: "$35,000 - $45,000", 
+        timeline: "2-3 months", 
+        image: img2, 
+        category: "Bathroom", 
+        status: "OPEN",
+        postedAt: new Date(Date.now() - 14 * 60 * 60 * 1000), // 14 hours ago
+        quotesReceived: 0,
+        maxQuotes: 5
+    },
+    { 
+        id: 12, 
+        title: "Modern Kitchen Renovation with Custom Cabinets", 
+        address: "Austin, TX", 
+        budget: "$35,000 - $45,000", 
+        timeline: "2-3 months", 
+        image: img5, 
+        category: "Kitchen", 
+        status: "OPEN",
+        postedAt: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
+        quotesReceived: 2,
+        maxQuotes: 5
+    },
 ];
 
 interface FindProjectsProps {
     onNavigate?: (page: string) => void;
+    userRole?: 'contractor' | 'homeowner' | 'admin' | null; // NEW: Pass user role for privacy
 }
 
-export function FindProjects({ onNavigate }: FindProjectsProps) {
+export function FindProjects({ onNavigate, userRole = null }: FindProjectsProps) {
     const [priceRange, setPriceRange] = useState([0, 50000]);
     const [showFilters, setShowFilters] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -117,6 +264,10 @@ export function FindProjects({ onNavigate }: FindProjectsProps) {
                             budget={project.budget}
                             timeline={project.timeline}
                             category={project.category}
+                            showPrivacyProtection={true}
+                            quotesReceived={project.quotesReceived}
+                            maxQuotes={project.maxQuotes}
+                            userRole={userRole} // CRITICAL: Pass user role for budget privacy
                         />
                     ))}
                 </div>

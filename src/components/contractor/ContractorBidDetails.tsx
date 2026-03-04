@@ -5,9 +5,10 @@ import { Button } from '../ui/button';
 interface ContractorBidDetailsProps {
   onBack: () => void;
   onEditQuote?: () => void;
+  onViewHomeownerProfile?: () => void; // NEW: Navigate to homeowner profile
 }
 
-export function ContractorBidDetails({ onBack, onEditQuote }: ContractorBidDetailsProps) {
+export function ContractorBidDetails({ onBack, onEditQuote, onViewHomeownerProfile }: ContractorBidDetailsProps) {
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
 
   const projectPhotos = [
@@ -192,12 +193,15 @@ export function ContractorBidDetails({ onBack, onEditQuote }: ContractorBidDetai
             {/* Homeowner Info */}
             <div className="bg-white border border-slate-200 rounded-xl p-6">
               <h3 className="font-bold text-slate-900 mb-4">Homeowner</h3>
-              <div className="flex items-center gap-3 mb-4">
+              <div 
+                onClick={onViewHomeownerProfile}
+                className="flex items-center gap-3 mb-4 cursor-pointer hover:bg-slate-50 p-2 -m-2 rounded-lg transition-colors group"
+              >
                 <div className="size-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
                   SM
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-900">Sarah Martinez</p>
+                  <p className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">Sarah Martinez</p>
                   <p className="text-xs text-slate-500">Member since June 2024</p>
                 </div>
               </div>

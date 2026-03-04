@@ -10,11 +10,13 @@ import {
   CheckCircle2,
   MessageSquare,
   Share2,
-  Bookmark
+  Bookmark,
+  Lock
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { SubmitQuoteModal, QuoteFormData } from './SubmitQuoteModal';
+import { QuoteSlotSystem } from './QuoteSlotSystem';
 
 interface ProjectDetailsProps {
   onBack: () => void;
